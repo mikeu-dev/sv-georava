@@ -5,10 +5,13 @@
 	import ThemeToggle from '../../molecules/ThemeToggle.svelte';
 	import JSONEditor from './JSONEditor.svelte';
 	import FeatureList from './FeatureList.svelte';
+	import LayerManager from './LayerManager.svelte';
+	import SpatialAnalysis from './SpatialAnalysis.svelte';
 	import {
 		Code2,
 		ListFilter,
 		Layers,
+		Wand2,
 		CircleHelp,
 		Settings2,
 		Undo2,
@@ -25,16 +28,17 @@
 	type LucideIcon = Component<ComponentProps<Icon>>;
 
 	interface SidebarTabItem {
-		id: SidebarTab;
+		id: SidebarTab | 'spatial';
 		icon: LucideIcon;
 		label: string;
 	}
 
 	const tabs: SidebarTabItem[] = [
-		{ id: 'json', icon: Code2 as unknown as LucideIcon, label: 'JSON Editor' },
+		{ id: 'json', icon: Code2 as unknown as LucideIcon, label: 'JSON' },
 		{ id: 'features', icon: ListFilter as unknown as LucideIcon, label: 'Features' },
 		{ id: 'layers', icon: Layers as unknown as LucideIcon, label: 'Layers' },
-		{ id: 'help', icon: CircleHelp as unknown as LucideIcon, label: 'Help' }
+		{ id: 'spatial' as any, icon: Wand2 as unknown as LucideIcon, label: 'Spatial' },
+		{ id: 'help' as any, icon: CircleHelp as unknown as LucideIcon, label: 'Help' }
 	];
 
 	let { children } = $props();
@@ -70,19 +74,19 @@
 	</div>
 
 	<!-- Tabs Nav -->
-	<nav class="flex border-b bg-muted/10 p-1 gap-1">
+	<nav class="flex border-b bg-muted/10 p-1 gap-1 overflow-x-auto no-scrollbar">
 		{#each tabs as tab (tab.id)}
 			<button
-				onclick={() => uiStore.setActiveTab(tab.id)}
+				onclick={() => uiStore.setActiveTab(tab.id as any)}
 				class={cn(
-					'flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
+					'flex-1 rounded-md px-2 py-1.5 text-[10px] font-medium transition-colors whitespace-nowrap',
 					uiStore.activeTab === tab.id
 						? 'bg-background text-foreground shadow-sm'
 						: 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
 				)}
 			>
-				<div class="flex items-center justify-center gap-2">
-					<tab.icon class="h-3.5 w-3.5" />
+				<div class="flex items-center justify-center gap-1.5">
+					<tab.icon class="h-3 w-3" />
 					<span>{tab.label}</span>
 				</div>
 			</button>
@@ -95,9 +99,13 @@
 			<JSONEditor />
 		{:else if uiStore.activeTab === 'features'}
 			<FeatureList />
+		{:else if uiStore.activeTab === 'layers'}
+			<LayerManager />
+		{:else if uiStore.activeTab === 'spatial'}
+			<SpatialAnalysis />
 		{:else}
 			<div class="flex h-full flex-col items-center justify-center p-8 text-center">
-				<p class="text-sm text-muted-foreground italic">
+				<p class="text-xs text-muted-foreground italic">
 					Module {uiStore.activeTab} is under construction...
 				</p>
 			</div>
@@ -111,3 +119,13 @@
 		<div class="text-[10px] text-muted-foreground">v2.0.0-beta</div>
 	</footer>
 </aside>
+
+<style>
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>
