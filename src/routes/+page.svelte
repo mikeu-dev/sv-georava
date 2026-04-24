@@ -1,2 +1,10 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import MapWorkspace from '$lib/components/templates/MapWorkspace.svelte';
+</script>
+
+<svelte:head>
+	<title>Georava | Professional Geospatial Toolkit</title>
+	<meta name="description" content="Advanced GIS mapping and analysis tool built with SvelteKit and OpenLayers." />
+</svelte:head>
+
+<MapWorkspace />
