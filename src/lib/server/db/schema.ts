@@ -1,9 +1,10 @@
-import { pgTable, serial, integer, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 
-export const task = pgTable('task', {
+/**
+ * Database schema definitions.
+ */
+export const users = pgTable('users', {
 	id: serial('id').primaryKey(),
-	title: text('title').notNull(),
-	priority: integer('priority').notNull().default(1)
+	fullName: text('full_name'),
+	phone: varchar('phone', { length: 256 }),
 });
-
-export *  from './auth.schema';
