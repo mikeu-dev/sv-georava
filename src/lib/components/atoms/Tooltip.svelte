@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { Tooltip as BitsTooltip } from 'bits-ui';
 	import { cn } from '$lib/utils/cn';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		content: string;
-		children: import('svelte').Snippet;
+		children: Snippet;
 		side?: 'top' | 'right' | 'bottom' | 'left';
 		align?: 'start' | 'center' | 'end';
 		delayDuration?: number;
@@ -22,10 +23,8 @@
 </script>
 
 <BitsTooltip.Root {delayDuration}>
-	<BitsTooltip.Trigger asChild let:builder>
-		<div use:builder.action {...builder} class="inline-block">
-			{@render children()}
-		</div>
+	<BitsTooltip.Trigger class="inline-block outline-none">
+		{@render children()}
 	</BitsTooltip.Trigger>
 	<BitsTooltip.Content
 		{side}
