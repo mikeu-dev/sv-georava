@@ -36,16 +36,17 @@
 	];
 </script>
 
-<div class="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-1 rounded-lg border bg-background/80 p-1 shadow-lg backdrop-blur-md">
-	<div class="flex items-center gap-1 px-1">
+<div class="drawing-tools ol-unselectable ol-control pointer-events-auto">
+	<div class="drawing-controls">
 		{#each tools as tool (tool.type)}
 			<IconButton
 				icon={tool.icon}
 				label={tool.label}
 				onclick={() => mapStore.setDrawType(tool.type)}
 				active={mapStore.drawType === tool.type}
-				variant={mapStore.drawType === tool.type ? 'secondary' : 'ghost'}
+				variant={mapStore.drawType === tool.type ? 'accent' : 'ghost'}
 				class="h-8 w-8"
+				side="left"
 			/>
 		{/each}
 	</div>

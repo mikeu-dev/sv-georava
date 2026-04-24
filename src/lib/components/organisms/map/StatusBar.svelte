@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
-	import { formatCoordinate } from '$lib/utils/format';
 
 	let coords = $state({ lon: '0.0000', lat: '0.0000' });
 	let zoom = $state('0.0');
@@ -10,7 +8,7 @@
 	// For now, we'll keep it as a placeholder that will be wired up in MapCanvas.
 </script>
 
-<div class="status-bar ol-unselectable ol-control">
+<div class="status-bar ol-unselectable ol-control pointer-events-auto">
 	<div class="flex items-center gap-6 justify-center w-full">
 		<div class="flex items-center gap-1.5">
 			<span class="text-muted-foreground uppercase text-[9px] font-bold tracking-wider">Lon</span>

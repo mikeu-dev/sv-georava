@@ -168,8 +168,11 @@
 	}
 </script>
 
-<div bind:this={mapElement} class="relative h-full w-full outline-none bg-muted/20">
-	{@render children?.()}
+<div class="relative h-full w-full overflow-hidden">
+	<div bind:this={mapElement} class="h-full w-full outline-none bg-muted/20"></div>
+	<div class="absolute inset-0 pointer-events-none z-20">
+		{@render children?.()}
+	</div>
 </div>
 
 <style>
