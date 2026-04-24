@@ -4,10 +4,6 @@
 	import type { Component, ComponentProps } from 'svelte';
 	import type { Icon } from 'lucide-svelte';
 
-	/**
-	 * Interface for IconButton props to ensure strict typing without 'any'.
-	 * We use ComponentProps<Icon> to match exactly what Lucide icons expect.
-	 */
 	interface IconButtonProps {
 		icon: Component<ComponentProps<Icon>>;
 		label: string;
@@ -36,7 +32,15 @@
 </script>
 
 <Tooltip content={label} {side}>
-	<Button {variant} {size} {onclick} {disabled} class={className} data-active={active}>
+	<Button 
+		tag="span"
+		{variant} 
+		{size} 
+		{onclick} 
+		{disabled} 
+		class={className} 
+		data-active={active}
+	>
 		<IconComp class={iconClass ?? 'h-4 w-4'} />
 	</Button>
 </Tooltip>
