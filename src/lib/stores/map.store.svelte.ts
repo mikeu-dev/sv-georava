@@ -156,7 +156,14 @@ function createMapStore() {
 		setProjection,
 		syncFeaturesFromString,
 		setGeojsonFromEditor,
-		triggerZoomTo
+		triggerZoomTo,
+		featuresToGeoJSON: () => {
+			try {
+				return format.writeFeaturesObject(features);
+			} catch {
+				return JSON.parse(DEFAULT_GEOJSON_STRING);
+			}
+		}
 	};
 }
 

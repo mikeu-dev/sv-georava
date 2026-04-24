@@ -1,38 +1,41 @@
 <script lang="ts">
 	import { authClient } from '$lib/auth-client';
 	import Button from '$lib/components/atoms/Button.svelte';
-	import { LayoutDashboard, Mail, Lock, Loader2 } from 'lucide-svelte';
+	import { Mail, Lock, Loader2, LayoutDashboard } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { loginSchema } from './+page.server';
+	import { loginSchema } from './schema';
+
+	import { untrack } from 'svelte';
 
 	let { data } = $props();
 
 	let isLoading = $state(false);
 	let authError = $state<string | null>(null);
 
-	const { form, errors, enhance, constraints } = superForm(data.form, {
-		validators: zodClient(loginSchema),
-		SPA: true, // Better-Auth handles the submission on the client
-		async onUpdate({ form }) {
-			if (!form.valid) return;
+	const { form, errors, enhance, constraints } = superForm(untrack(() => data.form), {
+		validators: zodClient(loginSchema as unknown as Parameters<typeof zodClient>[0]),
+		SPA: true,
+		async onUpdate({ form: f }) {
+			if (!f.valid) return;
 			
 			isLoading = true;
 			authError = null;
 
 			try {
 				const { error } = await authClient.signIn.email({
-					email: form.data.email,
-					password: form.data.password
+					email: f.data.email as string,
+					password: f.data.password as string
 				});
 
 				if (error) {
 					authError = error.message || 'Failed to sign in';
 				} else {
-					goto('/');
+					goto(resolve('/'));
 				}
-			} catch (e: unknown) {
+			} catch {
 				authError = 'An unexpected error occurred';
 			} finally {
 				isLoading = false;
@@ -114,7 +117,7 @@
 
 		<div class="text-center text-sm text-muted-foreground">
 			Don't have an account? 
-			<a href="/auth/register" class="font-medium text-primary hover:underline">Register now</a>
+			<a href={resolve('/auth/login')} class="font-medium text-primary hover:underline">Register now</a>
 		</div>
 	</div>
 </div>

@@ -1,15 +1,9 @@
-import { z } from 'zod';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { loginSchema } from './schema';
 import type { PageServerLoad } from './$types';
 
-// Strict validation schema
-export const loginSchema = z.object({
-	email: z.string().email('Invalid email address'),
-	password: z.string().min(6, 'Password must be at least 6 characters')
-});
-
 export const load: PageServerLoad = async () => {
-	const form = await superValidate(zod(loginSchema));
+	const form = await superValidate(zod(loginSchema as unknown as Parameters<typeof zod>[0]));
 	return { form };
 };

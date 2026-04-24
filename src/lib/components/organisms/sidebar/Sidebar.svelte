@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { uiStore } from '$lib/stores/ui.store.svelte';
+	import { resolve } from '$app/paths';
 	import { cn } from '$lib/utils/cn';
 	import IconButton from '../../molecules/IconButton.svelte';
 	import ThemeToggle from '../../molecules/ThemeToggle.svelte';
@@ -33,7 +34,7 @@
 	const session = authClient.useSession();
 
 	interface SidebarTabItem {
-		id: SidebarTab | 'spatial';
+		id: SidebarTab;
 		icon: LucideIcon;
 		label: string;
 	}
@@ -42,8 +43,8 @@
 		{ id: 'json', icon: Code2 as unknown as LucideIcon, label: 'JSON' },
 		{ id: 'features', icon: ListFilter as unknown as LucideIcon, label: 'Features' },
 		{ id: 'layers', icon: Layers as unknown as LucideIcon, label: 'Layers' },
-		{ id: 'spatial' as any, icon: Wand2 as unknown as LucideIcon, label: 'Spatial' },
-		{ id: 'help' as any, icon: CircleHelp as unknown as LucideIcon, label: 'Help' }
+		{ id: 'spatial', icon: Wand2 as unknown as LucideIcon, label: 'Spatial' },
+		{ id: 'help', icon: CircleHelp as unknown as LucideIcon, label: 'Help' }
 	];
 
 	let { children } = $props();
@@ -87,7 +88,7 @@
 	<nav class="flex border-b bg-muted/10 p-1 gap-1 overflow-x-auto no-scrollbar">
 		{#each tabs as tab (tab.id)}
 			<button
-				onclick={() => uiStore.setActiveTab(tab.id as any)}
+				onclick={() => uiStore.setActiveTab(tab.id)}
 				class={cn(
 					'flex-1 rounded-md px-2 py-1.5 text-[10px] font-medium transition-colors whitespace-nowrap',
 					uiStore.activeTab === tab.id
@@ -146,7 +147,7 @@
 				/>
 			{:else}
 				<a 
-					href="/auth/login" 
+					href={resolve("/auth/login")} 
 					class="flex items-center gap-2 text-[10px] font-medium text-primary hover:underline"
 				>
 					<UserIcon class="h-3.5 w-3.5" />

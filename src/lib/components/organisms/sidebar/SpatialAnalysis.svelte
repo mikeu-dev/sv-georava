@@ -4,6 +4,7 @@
 	import Button from '../../atoms/Button.svelte';
 	import { Wand2, Info } from 'lucide-svelte';
 	import * as turf from '@turf/turf';
+	import type { Feature as GeoJSONFeature } from 'geojson';
 	import GeoJSON from 'ol/format/GeoJSON.js';
 	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
@@ -25,7 +26,7 @@
 			const geojson = geojsonFormat.writeFeatureObject(selectedFeature);
 			
 			// Apply Turf Buffer
-			const buffered = turf.buffer(geojson as any, bufferDistance, { units: bufferUnit });
+			const buffered = turf.buffer(geojson as GeoJSONFeature, bufferDistance, { units: bufferUnit });
 			
 			// Convert back to OL feature
 			const newFeatures = geojsonFormat.readFeatures(buffered);
@@ -35,7 +36,7 @@
 				feature.setId(`buffer_${Date.now()}`);
 				feature.set('name', `Buffer ${bufferDistance}${bufferUnit === 'meters' ? 'm' : 'km'}`);
 				
-				mapStore.addFeatures([feature]);
+				mapStore.addFeature(feature);
 				uiStore.setValidation('success', 'Buffer created successfully');
 			}
 		} catch (e: unknown) {

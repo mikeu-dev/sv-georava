@@ -1,0 +1,69 @@
+Loading svelte-check in workspace: /var/www/html/sv-georava
+Getting Svelte diagnostics...
+
+/var/www/html/sv-georava/src/lib/services/spatial.service.ts:5:31
+Error: Cannot find module 'topojson-specification' or its corresponding type declarations. 
+import * as topojsonServer from 'topojson-server';
+import type { Topology } from 'topojson-specification';
+import type { BufferUnit } from '$lib/types/spatial.types';
+
+/var/www/html/sv-georava/src/lib/services/spatial.service.ts:33:3
+Error: Unused '@ts-expect-error' directive. 
+	calculateLength(feature: Feature<Geometry>): number {
+		// @ts-expect-error: turf types mismatch with native geojson
+		return turf.length(feature, { units: 'meters' });
+
+/var/www/html/sv-georava/src/lib/services/spatial.service.ts:83:3
+Error: Unused '@ts-expect-error' directive. 
+	): Feature<Geometry> {
+		// @ts-expect-error: turf.simplify typing issue
+		return turf.simplify(feature, { tolerance, highQuality });
+
+/var/www/html/sv-georava/src/routes/auth/login/+page.server.ts:7:39
+Error: Argument of type 'ZodObject<{ email: ZodString; password: ZodString; }, "strip", ZodTypeAny, { email: string; password: string; }, { email: string; password: string; }>' is not assignable to parameter of type 'ZodObjectType'.
+  The types returned by 'safeParse(...)' are incompatible between these types.
+    Type 'SafeParseReturnType<{ email: string; password: string; }, { email: string; password: string; }>' is not assignable to type 'SafeParseReturnType<Record<string, unknown> | undefined, Record<string, unknown>>'.
+      Type 'SafeParseError<{ email: string; password: string; }>' is not assignable to type 'SafeParseReturnType<Record<string, unknown> | undefined, Record<string, unknown>>'.
+        Type 'SafeParseError<{ email: string; password: string; }>' is not assignable to type 'SafeParseError<Record<string, unknown> | undefined>'.
+          The types returned by 'error.format()' are incompatible between these types.
+            Type 'ZodFormattedError<{ email: string; password: string; }, string>' is not assignable to type 'ZodFormattedError<Record<string, unknown> | undefined, string>'.
+              Type 'ZodFormattedError<{ email: string; password: string; }, string>' is not assignable to type '{ [x: string]: ZodFormattedError<unknown, string> | undefined; }'.
+                Property '_errors' is incompatible with index signature.
+                  Type 'string[]' is not assignable to type 'ZodFormattedError<unknown, string>'.
+                    Property '_errors' is missing in type 'string[]' but required in type '{ _errors: string[]; }'. 
+export const load: PageServerLoad = async () => {
+	const form = await superValidate(zod(loginSchema));
+	return { form };
+
+/var/www/html/sv-georava/src/lib/components/molecules/ThemeToggle.svelte:8:2
+Error: Type 'typeof Moon' is not assignable to type 'Component<{ [x: string]: any; name?: string | undefined; color?: string | undefined; size?: string | number | undefined; strokeWidth?: string | number | undefined; absoluteStrokeWidth?: boolean | undefined; iconNode?: IconNode | undefined; }, {}, string>'.
+  Type 'typeof Moon' provides no match for the signature '(this: void, internals: Brand<"ComponentInternals">, props: { [x: string]: any; name?: string | undefined; color?: string | undefined; size?: string | number | undefined; strokeWidth?: string | number | undefined; absoluteStrokeWidth?: boolean | undefined; iconNode?: IconNode | undefined; }): { ...; }'. (ts)
+<IconButton
+	icon={uiStore.theme === 'light' ? Moon : Sun}
+	label="Toggle Theme"
+
+/var/www/html/sv-georava/src/routes/auth/login/+page.svelte:16:59
+Warn: This reference only captures the initial value of `data`. Did you mean to reference it inside a closure instead?
+https://svelte.dev/e/state_referenced_locally (svelte)
+
+	const { form, errors, enhance, constraints } = superForm(data.form, {
+		validators: zodClient(loginSchema),
+
+/var/www/html/sv-georava/src/routes/auth/login/+page.svelte:17:25
+Error: Argument of type 'ZodObject<{ email: ZodString; password: ZodString; }, "strip", ZodTypeAny, { email: string; password: string; }, { email: string; password: string; }>' is not assignable to parameter of type 'ZodObjectType'.
+  The types returned by 'safeParse(...)' are incompatible between these types.
+    Type 'SafeParseReturnType<{ email: string; password: string; }, { email: string; password: string; }>' is not assignable to type 'SafeParseReturnType<Record<string, unknown> | undefined, Record<string, unknown>>'.
+      Type 'SafeParseError<{ email: string; password: string; }>' is not assignable to type 'SafeParseReturnType<Record<string, unknown> | undefined, Record<string, unknown>>'.
+        Type 'SafeParseError<{ email: string; password: string; }>' is not assignable to type 'SafeParseError<Record<string, unknown> | undefined>'.
+          The types returned by 'error.format()' are incompatible between these types.
+            Type 'ZodFormattedError<{ email: string; password: string; }, string>' is not assignable to type 'ZodFormattedError<Record<string, unknown> | undefined, string>'.
+              Type 'ZodFormattedError<{ email: string; password: string; }, string>' is not assignable to type '{ [x: string]: ZodFormattedError<unknown, string> | undefined; }'.
+                Property '_errors' is incompatible with index signature.
+                  Type 'string[]' is not assignable to type 'ZodFormattedError<unknown, string>'.
+                    Property '_errors' is missing in type 'string[]' but required in type '{ _errors: string[]; }'. (ts)
+	const { form, errors, enhance, constraints } = superForm(data.form, {
+		validators: zodClient(loginSchema),
+		SPA: true,
+
+====================================
+svelte-check found 6 errors and 1 warning in 4 files

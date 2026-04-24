@@ -4,9 +4,9 @@
 
 export type Theme = 'light' | 'dark';
 
-export type SidebarTab = 'json' | 'features' | 'layers' | 'help';
+export type SidebarTab = 'json' | 'features' | 'layers' | 'spatial' | 'help';
 
-export type ValidationStatus = 'idle' | 'loading' | 'valid' | 'invalid';
+export type ValidationStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export interface ToastMessage {
 	readonly title: string;

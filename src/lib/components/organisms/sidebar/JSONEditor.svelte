@@ -5,7 +5,10 @@
 	import { oneDark } from '@codemirror/theme-one-dark';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { uiStore } from '$lib/stores/ui.store.svelte';
+	import { cn } from '$lib/utils/cn';
 	import GeoJSON from 'ol/format/GeoJSON.js';
+	import type { Feature } from 'ol';
+	import type { Geometry } from 'ol/geom';
 
 	let editorElement = $state<HTMLElement>();
 	let view = $state<EditorView>();
@@ -45,7 +48,7 @@
 			
 			// Update store with features from editor
 			mapStore.skipFeaturesSync = true;
-			mapStore.setFeatures(features as any);
+			mapStore.setFeatures(features as Feature<Geometry>[]);
 			uiStore.setValidation('success', 'GeoJSON valid');
 		} catch (e: unknown) {
 			uiStore.setValidation('error', e instanceof Error ? e.message : 'Invalid JSON');
@@ -77,11 +80,11 @@
 	
 	{#if uiStore.validationFeedback}
 		<div 
-			class="border-t px-4 py-2 text-xs font-mono transition-colors"
-			class:bg-destructive/10={uiStore.validationStatus === 'error'}
-			class:text-destructive={uiStore.validationStatus === 'error'}
-			class:bg-success/10={uiStore.validationStatus === 'success'}
-			class:text-success={uiStore.validationStatus === 'success'}
+			class={cn(
+				"border-t px-4 py-2 text-xs font-mono transition-colors",
+				uiStore.validationStatus === 'error' && "bg-destructive/10 text-destructive",
+				uiStore.validationStatus === 'success' && "bg-success/10 text-success"
+			)}
 		>
 			{uiStore.validationFeedback}
 		</div>

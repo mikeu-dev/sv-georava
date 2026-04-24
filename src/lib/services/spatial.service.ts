@@ -30,7 +30,6 @@ export const GisService = {
 	},
 
 	calculateLength(feature: Feature<Geometry>): number {
-		// @ts-expect-error: turf types mismatch with native geojson
 		return turf.length(feature, { units: 'meters' });
 	},
 
@@ -80,7 +79,6 @@ export const GisService = {
 		tolerance: number = 0.01,
 		highQuality: boolean = false
 	): Feature<Geometry> {
-		// @ts-expect-error: turf.simplify typing issue
 		return turf.simplify(feature, { tolerance, highQuality });
 	},
 

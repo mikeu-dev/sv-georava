@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { mapStore } from '$lib/stores/map.store.svelte';
+	import { cn } from '$lib/utils/cn';
 	import IconButton from '../../molecules/IconButton.svelte';
 	import { Trash2, Focus, Box, LineChart, MapPin } from 'lucide-svelte';
 	import type { Feature } from 'ol';
@@ -22,7 +23,7 @@
 
 	function deleteFeature(id: string | number | undefined) {
 		if (id === undefined) return;
-		mapStore.deleteFeature(id);
+		mapStore.removeFeature(id);
 	}
 </script>
 
@@ -42,12 +43,14 @@
 		{:else}
 			<ul class="divide-y border-b">
 				{#each mapStore.features as feature (feature.getId())}
+					{@const Icon = getFeatureIcon(feature)}
 					<li 
-						class="group flex items-center justify-between px-4 py-2 hover:bg-muted/50 transition-colors"
-						class:bg-primary/5={mapStore.selectedFeature === feature}
+						class={cn(
+							"group flex items-center justify-between px-4 py-2 hover:bg-muted/50 transition-colors",
+							mapStore.selectedFeature === feature && "bg-primary/5"
+						)}
 					>
 						<div class="flex items-center gap-3 overflow-hidden">
-							{@const Icon = getFeatureIcon(feature)}
 							<Icon class="h-4 w-4 shrink-0 text-muted-foreground" />
 							<div class="flex flex-col overflow-hidden">
 								<span class="truncate text-xs font-medium">
