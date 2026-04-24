@@ -11,7 +11,9 @@ export type DrawType =
 	| 'Edit'
 	| 'Delete'
 	| 'MeasureDistance'
-	| 'MeasureArea';
+	| 'MeasureArea'
+	| 'Freehand'
+	| 'Text';
 
 export type ProjectionCode = 'EPSG:4326' | 'EPSG:3857';
 

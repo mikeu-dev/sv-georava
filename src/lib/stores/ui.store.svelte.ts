@@ -1,28 +1,32 @@
 /**
- * UI state store using Svelte 5 Runes.
+ * UI state store using Svelte 5 Runes with Class pattern.
  * Manages theme, sidebar, and application-level UI state.
  */
-
 import type { Theme, SidebarTab, ValidationStatus } from '$lib/types/ui.types';
 
-function createUiStore() {
-	let theme = $state<Theme>('light');
-	let activeTab = $state<SidebarTab>('json');
-	let validationStatus = $state<ValidationStatus>('idle');
-	let validationFeedback = $state('');
-	let isCopied = $state(false);
-	let isLinkCopied = $state(false);
+class UiStore {
+	theme = $state<Theme>('light');
+	activeTab = $state<SidebarTab>('json');
+	validationStatus = $state<ValidationStatus>('idle');
+	validationFeedback = $state('');
+	isCopied = $state(false);
+	isLinkCopied = $state(false);
+	sidebarCollapsed = $state(false);
 
-	function initTheme() {
+	constructor() {
+		this.initTheme();
+	}
+
+	initTheme() {
 		if (typeof window === 'undefined') return;
 		const savedTheme = localStorage.getItem('theme');
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		const initialTheme = (savedTheme as Theme) || (prefersDark ? 'dark' : 'light');
-		theme = initialTheme;
-		applyTheme(initialTheme);
+		this.theme = initialTheme;
+		this.applyTheme(initialTheme);
 	}
 
-	function applyTheme(t: Theme) {
+	applyTheme(t: Theme) {
 		if (typeof document === 'undefined') return;
 		if (t === 'dark') {
 			document.documentElement.classList.add('dark');
@@ -31,53 +35,40 @@ function createUiStore() {
 		}
 	}
 
-	function toggleTheme() {
-		const newTheme: Theme = theme === 'light' ? 'dark' : 'light';
-		theme = newTheme;
+	toggleTheme() {
+		const newTheme: Theme = this.theme === 'light' ? 'dark' : 'light';
+		this.theme = newTheme;
 		localStorage.setItem('theme', newTheme);
-		applyTheme(newTheme);
+		this.applyTheme(newTheme);
 	}
 
-	function setActiveTab(tab: SidebarTab) {
-		activeTab = tab;
+	setActiveTab(tab: SidebarTab) {
+		this.activeTab = tab;
 	}
 
-	function setValidation(status: ValidationStatus, feedback: string = '') {
-		validationStatus = status;
-		validationFeedback = feedback;
+	setValidation(status: ValidationStatus, feedback: string = '') {
+		this.validationStatus = status;
+		this.validationFeedback = feedback;
 	}
 
-	function resetValidation() {
-		validationStatus = 'idle';
-		validationFeedback = '';
+	resetValidation() {
+		this.validationStatus = 'idle';
+		this.validationFeedback = '';
 	}
 
-	function flashCopied() {
-		isCopied = true;
-		setTimeout(() => (isCopied = false), 2000);
+	flashCopied() {
+		this.isCopied = true;
+		setTimeout(() => (this.isCopied = false), 2000);
 	}
 
-	function flashLinkCopied() {
-		isLinkCopied = true;
-		setTimeout(() => (isLinkCopied = false), 2000);
+	flashLinkCopied() {
+		this.isLinkCopied = true;
+		setTimeout(() => (this.isLinkCopied = false), 2000);
 	}
 
-	return {
-		get theme() { return theme; },
-		get activeTab() { return activeTab; },
-		get validationStatus() { return validationStatus; },
-		get validationFeedback() { return validationFeedback; },
-		get isCopied() { return isCopied; },
-		get isLinkCopied() { return isLinkCopied; },
-
-		initTheme,
-		toggleTheme,
-		setActiveTab,
-		setValidation,
-		resetValidation,
-		flashCopied,
-		flashLinkCopied
-	};
+	toggleSidebar() {
+		this.sidebarCollapsed = !this.sidebarCollapsed;
+	}
 }
 
-export const uiStore = createUiStore();
+export const uiStore = new UiStore();

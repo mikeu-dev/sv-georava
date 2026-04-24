@@ -1,65 +1,52 @@
 <script lang="ts">
-	import { mapStore } from '$lib/stores/map.store.svelte';
 	import IconButton from '../../molecules/IconButton.svelte';
 	import {
 		MousePointer2,
-		Type,
-		Spline,
-		Pentagon,
 		Square,
-		Circle as CircleIcon,
+		Circle,
 		Pencil,
+		Minus,
 		Trash2,
-		Ruler,
-		BoxSelect
+		Type,
+		Pentagon
 	} from 'lucide-svelte';
+	import { mapStore } from '$lib/stores/map.store.svelte';
 	import type { DrawType } from '$lib/types/map.types';
+	import type { Icon } from 'lucide-svelte';
+	import type { Component, ComponentProps } from 'svelte';
 
-	const tools: { type: DrawType; icon: any; label: string; shortcut?: string }[] = [
-		{ type: 'Point', icon: MousePointer2, label: 'Point', shortcut: 'P' },
-		{ type: 'LineString', icon: Spline, label: 'LineString', shortcut: 'L' },
-		{ type: 'Polygon', icon: Pentagon, label: 'Polygon', shortcut: 'G' },
-		{ type: 'Rectangle', icon: Square, label: 'Rectangle', shortcut: 'R' },
-		{ type: 'Circle', icon: CircleIcon, label: 'Circle', shortcut: 'C' },
-		{ type: 'Edit', icon: Pencil, label: 'Edit Mode', shortcut: 'E' },
-		{ type: 'MeasureDistance', icon: Ruler, label: 'Measure Distance', shortcut: 'M' },
-		{ type: 'MeasureArea', icon: BoxSelect, label: 'Measure Area', shortcut: 'A' }
-	];
+	type LucideIcon = Component<ComponentProps<Icon>>;
 
-	function toggleTool(type: DrawType) {
-		if (mapStore.drawType === type) {
-			mapStore.setDrawType(null);
-		} else {
-			mapStore.setDrawType(type);
-		}
+	interface ToolItem {
+		type: DrawType;
+		icon: LucideIcon;
+		label: string;
+		shortcut?: string;
 	}
+
+	const tools: ToolItem[] = [
+		{ type: 'Point', icon: MousePointer2 as unknown as LucideIcon, label: 'Select (V)', shortcut: 'V' },
+		{ type: 'LineString', icon: Minus as unknown as LucideIcon, label: 'Line (L)', shortcut: 'L' },
+		{ type: 'Polygon', icon: Pentagon as unknown as LucideIcon, label: 'Polygon (P)', shortcut: 'P' },
+		{ type: 'Circle', icon: Circle as unknown as LucideIcon, label: 'Circle (C)', shortcut: 'C' },
+		{ type: 'Rectangle', icon: Square as unknown as LucideIcon, label: 'Rectangle (R)', shortcut: 'R' },
+		{ type: 'Freehand', icon: Pencil as unknown as LucideIcon, label: 'Freehand (F)', shortcut: 'F' },
+		{ type: 'Text', icon: Type as unknown as LucideIcon, label: 'Text (T)', shortcut: 'T' },
+		{ type: 'Delete', icon: Trash2 as unknown as LucideIcon, label: 'Delete (Del)', shortcut: 'Del' }
+	];
 </script>
 
-<div class="drawing-tools ol-unselectable ol-control">
-	<div class="drawing-controls">
-		{#each tools as tool}
+<div class="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-1 rounded-lg border bg-background/80 p-1 shadow-lg backdrop-blur-md">
+	<div class="flex items-center gap-1 px-1">
+		{#each tools as tool (tool.type)}
 			<IconButton
 				icon={tool.icon}
-				label={`${tool.label} (${tool.shortcut})`}
+				label={tool.label}
+				onclick={() => mapStore.setDrawType(tool.type)}
 				active={mapStore.drawType === tool.type}
-				onclick={() => toggleTool(tool.type)}
-				side="left"
-				iconClass="h-[18px] w-[18px]"
+				variant={mapStore.drawType === tool.type ? 'secondary' : 'ghost'}
+				class="h-8 w-8"
 			/>
-		{each}
-
-		<div class="my-1 h-px bg-border/50 mx-1"></div>
-
-		<IconButton
-			icon={Trash2}
-			label="Clear All"
-			onclick={() => {
-				if (confirm('Clear all features?')) mapStore.clearFeatures();
-			}}
-			variant="ghost"
-			side="left"
-			class="text-destructive hover:bg-destructive/10 hover:text-destructive"
-			iconClass="h-[18px] w-[18px]"
-		/>
+		{/each}
 	</div>
 </div>

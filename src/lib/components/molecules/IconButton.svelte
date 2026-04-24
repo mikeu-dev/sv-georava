@@ -1,10 +1,15 @@
 <script lang="ts">
 	import Button from '../atoms/Button.svelte';
 	import Tooltip from '../atoms/Tooltip.svelte';
-	import type { Component } from 'svelte';
+	import type { Component, ComponentProps } from 'svelte';
+	import type { Icon } from 'lucide-svelte';
 
-	interface Props {
-		icon: Component;
+	/**
+	 * Interface for IconButton props to ensure strict typing without 'any'.
+	 * We use ComponentProps<Icon> to match exactly what Lucide icons expect.
+	 */
+	interface IconButtonProps {
+		icon: Component<ComponentProps<Icon>>;
 		label: string;
 		onclick?: () => void;
 		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'accent';
@@ -17,7 +22,7 @@
 	}
 
 	let {
-		icon: Icon,
+		icon: IconComp,
 		label,
 		onclick,
 		variant = 'ghost',
@@ -27,18 +32,11 @@
 		side = 'top',
 		class: className,
 		iconClass
-	}: Props = $props();
+	}: IconButtonProps = $props();
 </script>
 
 <Tooltip content={label} {side}>
-	<Button
-		{variant}
-		{size}
-		{onclick}
-		{disabled}
-		class={className}
-		data-active={active}
-	>
-		<Icon class={iconClass ?? 'h-4 w-4'} />
+	<Button {variant} {size} {onclick} {disabled} class={className} data-active={active}>
+		<IconComp class={iconClass ?? 'h-4 w-4'} />
 	</Button>
 </Tooltip>

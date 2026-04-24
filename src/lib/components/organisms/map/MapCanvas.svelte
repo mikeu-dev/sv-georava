@@ -7,28 +7,29 @@
 	import VectorLayer from 'ol/layer/Vector.js';
 	import VectorSource from 'ol/source/Vector.js';
 	import OSM from 'ol/source/OSM.js';
-	import XYZ from 'ol/source/XYZ.js';
-	import { fromLonLat, toLonLat } from 'ol/proj.js';
+	import { fromLonLat } from 'ol/proj.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
-	import { Draw, Modify, Select, Snap, DragAndDrop } from 'ol/interaction.js';
+	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
 	import { shiftKeyOnly } from 'ol/events/condition.js';
 	import GeoJSON from 'ol/format/GeoJSON.js';
+	import type { Feature } from 'ol';
+	import type { Geometry } from 'ol/geom';
+	import type { SelectEvent } from 'ol/interaction/Select';
+	import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop';
+	import type { DrawEvent } from 'ol/interaction/Draw';
+	import type MapBrowserEvent from 'ol/MapBrowserEvent';
 
 	import { mapStore } from '$lib/stores/map.store.svelte';
-	import { BASEMAPS } from '$lib/config/basemaps';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
 	import { topoJsonDragFormat } from '$lib/services/ol-topojson-format';
 
+	let { children } = $props();
+
 	let mapElement = $state<HTMLElement>();
 	let map = $state<Map>();
-	let vectorSource = $state<VectorSource>();
-	let vectorLayer = $state<VectorLayer>();
-	let basemapLayer = $state<TileLayer>();
-
-	const geojsonFormat = new GeoJSON({
-		featureProjection: 'EPSG:3857',
-		dataProjection: 'EPSG:4326'
-	});
+	let vectorSource = $state<VectorSource<Feature<Geometry>>>();
+	let vectorLayer = $state<VectorLayer<VectorSource<Feature<Geometry>>>>();
+	let basemapLayer = $state<TileLayer<OSM>>();
 
 	// Initialize Map
 	onMount(() => {
@@ -60,23 +61,23 @@
 
 		// Interaction: Select
 		const select = new Select({
-			style: null, // use default or custom style
+			style: undefined,
 			hitTolerance: 5
 		});
 		map.addInteraction(select);
-		select.on('select', (e) => {
+		select.on('select', (e: SelectEvent) => {
 			const selected = e.selected[0] || null;
-			mapStore.selectFeature(selected as any);
+			mapStore.selectFeature(selected as Feature<Geometry> | null);
 		});
 
 		// Interaction: DragAndDrop
 		const dragAndDrop = new DragAndDrop({
-			formatConstructors: [GeoJSON as any, topoJsonDragFormat as any]
+			formatConstructors: [GeoJSON as unknown as typeof GeoJSON, topoJsonDragFormat as unknown as typeof GeoJSON]
 		});
 		map.addInteraction(dragAndDrop);
-		dragAndDrop.on('addfeatures', (e) => {
+		dragAndDrop.on('addfeatures', (e: DragAndDropEvent) => {
 			if (e.features) {
-				vectorSource?.addFeatures(e.features as any);
+				vectorSource?.addFeatures(e.features as Feature<Geometry>[]);
 				syncStoreFromMap();
 			}
 		});
@@ -84,14 +85,21 @@
 		// Interaction: Modify
 		const modify = new Modify({
 			source: vectorSource,
-			condition: (e) => shiftKeyOnly(e) || e.type === 'pointerdown'
+			condition: (e: unknown) => {
+				// Type refinement for OpenLayers MapBrowserEvent
+				if (e && typeof e === 'object' && 'originalEvent' in e) {
+					const event = e as MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>;
+					return shiftKeyOnly(event) || event.type === 'pointerdown';
+				}
+				return false;
+			}
 		});
 		map.addInteraction(modify);
 		modify.on('modifyend', () => syncStoreFromMap());
 
 		// Sync store initial state
 		if (mapStore.features.length > 0) {
-			vectorSource.addFeatures(mapStore.features as any);
+			vectorSource.addFeatures(mapStore.features as Feature<Geometry>[]);
 		}
 
 		return () => {
@@ -99,14 +107,14 @@
 		};
 	});
 
-	// Effect: Sync Map Features from Store (External updates like JSON Editor)
+	// Effect: Sync Map Features from Store
 	$effect(() => {
 		if (!vectorSource || !mapStore.features || mapStore.skipFeaturesSync) {
 			mapStore.skipFeaturesSync = false;
 			return;
 		}
 		vectorSource.clear();
-		vectorSource.addFeatures(mapStore.features as any);
+		vectorSource.addFeatures(mapStore.features as Feature<Geometry>[]);
 	});
 
 	// Effect: Handle Drawing Tools
@@ -122,13 +130,9 @@
 		const type = mapStore.drawType;
 		if (!type || type === 'Edit' || type === 'Delete') return;
 
-		let olType: any = type;
-		let geometryFunction: any;
-
-		if (type === 'Rectangle') {
-			olType = 'Circle';
-			// geometryFunction = createBox(); // Need to import or implement
-		}
+		// We cast to unknown then to type because OL draw types are strict strings
+		const olType = type as unknown as import('ol/geom/Geometry').Type;
+		const geometryFunction = undefined;
 
 		const draw = new Draw({
 			source: vectorSource,
@@ -136,12 +140,11 @@
 			geometryFunction
 		});
 
-		draw.on('drawend', (e) => {
+		draw.on('drawend', (e: DrawEvent) => {
 			const feature = e.feature;
 			if (!feature.getId()) {
 				feature.setId(`f_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 			}
-			// Small delay to ensure geometry is finalized
 			setTimeout(() => syncStoreFromMap(), 10);
 		});
 
@@ -161,12 +164,12 @@
 		if (!vectorSource) return;
 		const features = vectorSource.getFeatures();
 		mapStore.skipFeaturesSync = true;
-		mapStore.setFeatures(features as any);
+		mapStore.setFeatures(features as Feature<Geometry>[]);
 	}
 </script>
 
 <div bind:this={mapElement} class="relative h-full w-full outline-none bg-muted/20">
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>
