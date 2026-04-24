@@ -7,6 +7,7 @@
 	import FeatureList from './FeatureList.svelte';
 	import LayerManager from './LayerManager.svelte';
 	import SpatialAnalysis from './SpatialAnalysis.svelte';
+	import { authClient } from '$lib/auth-client';
 	import {
 		Code2,
 		ListFilter,
@@ -19,13 +20,17 @@
 		Copy,
 		Share2,
 		Download,
-		LayoutDashboard
+		LayoutDashboard,
+		LogOut,
+		User as UserIcon
 	} from 'lucide-svelte';
 	import type { SidebarTab } from '$lib/types/ui.types';
 	import type { Icon } from 'lucide-svelte';
 	import type { Component, ComponentProps } from 'svelte';
 
 	type LucideIcon = Component<ComponentProps<Icon>>;
+
+	const session = authClient.useSession();
 
 	interface SidebarTabItem {
 		id: SidebarTab | 'spatial';
@@ -42,6 +47,11 @@
 	];
 
 	let { children } = $props();
+
+	async function handleLogout() {
+		await authClient.signOut();
+		window.location.reload();
+	}
 </script>
 
 <aside
@@ -113,10 +123,41 @@
 		{@render children?.()}
 	</main>
 
-	<!-- Footer -->
-	<footer class="flex items-center justify-between border-t p-2">
-		<ThemeToggle />
-		<div class="text-[10px] text-muted-foreground">v2.0.0-beta</div>
+	<!-- Footer / User Profile -->
+	<footer class="flex flex-col border-t">
+		<div class="flex items-center justify-between p-2 px-3 bg-muted/5">
+			{#if $session.data}
+				<div class="flex items-center gap-2 overflow-hidden">
+					<div class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+						<UserIcon class="h-4 w-4" />
+					</div>
+					<div class="flex flex-col overflow-hidden">
+						<span class="truncate text-[10px] font-semibold">{$session.data.user.name}</span>
+						<span class="truncate text-[9px] text-muted-foreground">{$session.data.user.email}</span>
+					</div>
+				</div>
+				<IconButton 
+					icon={LogOut as unknown as LucideIcon} 
+					label="Sign Out" 
+					size="xs" 
+					variant="ghost" 
+					class="text-muted-foreground hover:text-destructive"
+					onclick={handleLogout}
+				/>
+			{:else}
+				<a 
+					href="/auth/login" 
+					class="flex items-center gap-2 text-[10px] font-medium text-primary hover:underline"
+				>
+					<UserIcon class="h-3.5 w-3.5" />
+					Sign in to sync
+				</a>
+			{/if}
+		</div>
+		<div class="flex items-center justify-between p-2 px-3 border-t">
+			<ThemeToggle />
+			<div class="text-[10px] text-muted-foreground">v2.0.0-beta</div>
+		</div>
 	</footer>
 </aside>
 
