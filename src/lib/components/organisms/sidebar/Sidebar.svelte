@@ -3,6 +3,8 @@
 	import { cn } from '$lib/utils/cn';
 	import IconButton from '../../molecules/IconButton.svelte';
 	import ThemeToggle from '../../molecules/ThemeToggle.svelte';
+	import JSONEditor from './JSONEditor.svelte';
+	import FeatureList from './FeatureList.svelte';
 	import {
 		Code2,
 		ListFilter,
@@ -89,6 +91,17 @@
 
 	<!-- Tab Content -->
 	<main class="flex-1 overflow-hidden relative">
+		{#if uiStore.activeTab === 'json'}
+			<JSONEditor />
+		{:else if uiStore.activeTab === 'features'}
+			<FeatureList />
+		{:else}
+			<div class="flex h-full flex-col items-center justify-center p-8 text-center">
+				<p class="text-sm text-muted-foreground italic">
+					Module {uiStore.activeTab} is under construction...
+				</p>
+			</div>
+		{/if}
 		{@render children?.()}
 	</main>
 
