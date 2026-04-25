@@ -12,7 +12,6 @@
     "module": "ESNext",
     "target": "ESNext",
     "isolatedModules": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "ignoreDeprecations": "6.0"
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
   }
 }
