@@ -3,21 +3,14 @@
 	import { Navigation } from 'lucide-svelte';
 	import type { Map } from 'ol';
 	import Control from 'ol/control/Control';
-	import Geolocation from 'ol/Geolocation.js';
-	import Feature from 'ol/Feature.js';
-	import Point from 'ol/geom/Point.js';
-	import { Vector as VectorSource } from 'ol/source.js';
-	import { Vector as VectorLayer } from 'ol/layer.js';
-	import { Style, Circle as CircleStyle, Fill, Stroke } from 'ol/style.js';
+	import { createGeolocation } from '@geovara/core';
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 
 	let { map, standalone = true } = $props<{ map: Map | undefined; standalone?: boolean }>();
 
 	let element = $state<HTMLElement>();
-	let geolocation = $state<Geolocation>();
-	let positionFeature = new Feature();
-	let accuracyFeature = new Feature();
+	let geolocationApi = $state<ReturnType<typeof createGeolocation>>();
 	let isTracking = $state(false);
 
 	onMount(() => {
@@ -25,56 +18,20 @@
 			const geoControl = standalone ? new Control({ element }) : null;
 			if (geoControl) map.addControl(geoControl);
 
-			geolocation = new Geolocation({
-				trackingOptions: {
-					enableHighAccuracy: true
-				},
-				projection: map.getView().getProjection()
-			});
-
-			const vectorSource = new VectorSource({
-				features: [accuracyFeature, positionFeature]
-			});
-
-			const vectorLayer = new VectorLayer({
-				source: vectorSource,
-				style: new Style({
-					image: new CircleStyle({
-						radius: 6,
-						fill: new Fill({ color: '#3399CC' }),
-						stroke: new Stroke({ color: '#fff', width: 2 })
-					})
-				}),
-				zIndex: 999
-			});
-			map.addLayer(vectorLayer);
-
-			geolocation.on('change:accuracyGeometry', () => {
-				accuracyFeature.setGeometry(geolocation?.getAccuracyGeometry() || undefined);
-			});
-
-			geolocation.on('change:position', () => {
-				const coordinates = geolocation?.getPosition();
-				positionFeature.setGeometry(coordinates ? new Point(coordinates) : undefined);
-				if (isTracking && coordinates) {
-					map?.getView().animate({
-						center: coordinates,
-						zoom: 16,
-						duration: 1000
-					});
-				}
+			geolocationApi = createGeolocation(map, {
+				zoomToPosition: true
 			});
 
 			return () => {
 				if (geoControl) map?.removeControl(geoControl);
-				map?.removeLayer(vectorLayer);
+				geolocationApi?.dispose();
 			};
 		}
 	});
 
 	function toggleTracking() {
 		isTracking = !isTracking;
-		geolocation?.setTracking(isTracking);
+		geolocationApi?.setTracking(isTracking);
 	}
 </script>
 

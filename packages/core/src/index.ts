@@ -6,4 +6,6 @@ export * from './spatial/spatial.js';
 export * from './format/topojson.js';
 export * from './export/export.js';
 export * from './import/import.js';
+export * from './geolocation/geolocation.js';
+export * from './measurement/measurement.js';
 export * from './types.js';
