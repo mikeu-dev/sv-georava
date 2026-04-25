@@ -8,6 +8,10 @@
 	import VectorSource from 'ol/source/Vector.js';
 	import OSM from 'ol/source/OSM.js';
 	import XYZ from 'ol/source/XYZ.js';
+	import TileSource from 'ol/source/Tile.js';
+	import ImageSource from 'ol/source/Image.js';
+	import Tile from 'ol/Tile.js';
+	import ImageCanvasSource from 'ol/source/ImageCanvas.js';
 	import { fromLonLat, toLonLat } from 'ol/proj.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
@@ -69,8 +73,16 @@
 		window.ol = {
 			Map,
 			View,
+			Tile,
 			layer: { Tile: TileLayer, Vector: VectorLayer },
-			source: { Vector: VectorSource, OSM, XYZ },
+			source: {
+				Vector: VectorSource,
+				OSM,
+				XYZ,
+				Tile: TileSource,
+				Image: ImageSource,
+				ImageCanvas: ImageCanvasSource
+			},
 			proj: { fromLonLat, toLonLat },
 			geom: { Point, LineString, Polygon, Circle },
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }

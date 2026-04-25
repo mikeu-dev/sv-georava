@@ -23,8 +23,12 @@
 </script>
 
 <BitsTooltip.Root {delayDuration}>
-	<BitsTooltip.Trigger class="inline-block outline-none">
-		{@render children()}
+	<BitsTooltip.Trigger>
+		{#snippet child({ props })}
+			<span {...props} class={cn('inline-block outline-none', className)}>
+				{@render children()}
+			</span>
+		{/snippet}
 	</BitsTooltip.Trigger>
 	<BitsTooltip.Content
 		{side}

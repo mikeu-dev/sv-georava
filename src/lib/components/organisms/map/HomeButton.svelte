@@ -35,6 +35,7 @@
 <div bind:this={element} class="ol-home-button ol-unselectable ol-control">
 	<Tooltip content="Reset View" side="right">
 		<Button
+			tag="span"
 			variant="secondary"
 			size="icon"
 			class="premium-control"

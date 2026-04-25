@@ -47,6 +47,7 @@
 <div bind:this={element} class="ol-zoom-extent ol-unselectable ol-control">
 	<Tooltip content="Zoom to Data Extent" side="right">
 		<Button
+			tag="span"
 			variant="secondary"
 			size="icon"
 			class="premium-control"

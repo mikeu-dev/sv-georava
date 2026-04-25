@@ -91,6 +91,7 @@
 <div bind:this={element} class="ol-screenshot ol-unselectable ol-control">
 	<Tooltip content="Export as Image" side="left">
 		<Button
+			tag="span"
 			variant="secondary"
 			size="icon"
 			class="premium-control h-9 w-9"

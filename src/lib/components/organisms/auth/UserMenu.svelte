@@ -36,17 +36,21 @@
 	{#if user}
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
-				<Button
-					variant="ghost"
-					size="icon"
-					class="premium-control h-9 w-9 overflow-hidden rounded-full"
-				>
-					{#if user.image}
-						<img src={user.image} alt={user.name} class="h-full w-full object-cover" />
-					{:else}
-						<UserCircle class="text-muted-foreground h-5 w-5" />
-					{/if}
-				</Button>
+				{#snippet child({ props })}
+					<Button
+						{...props}
+						tag="span"
+						variant="ghost"
+						size="icon"
+						class="premium-control h-9 w-9 overflow-hidden rounded-full"
+					>
+						{#if user.image}
+							<img src={user.image} alt={user.name} class="h-full w-full object-cover" />
+						{:else}
+							<UserCircle class="text-muted-foreground h-5 w-5" />
+						{/if}
+					</Button>
+				{/snippet}
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content
 				class="bg-background/95 animate-in fade-in-0 zoom-in-95 pointer-events-auto z-50 min-w-[200px] rounded-xl border p-1 shadow-2xl backdrop-blur-md"

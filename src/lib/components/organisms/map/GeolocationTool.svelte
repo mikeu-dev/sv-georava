@@ -83,6 +83,7 @@
 <div bind:this={element} class="ol-geolocation ol-unselectable ol-control">
 	<Tooltip content="My Location" side="right">
 		<Button
+			tag="span"
 			variant="secondary"
 			size="icon"
 			class="premium-control {isTracking ? 'text-primary' : ''}"

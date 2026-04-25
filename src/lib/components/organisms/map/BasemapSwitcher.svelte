@@ -38,14 +38,18 @@
 
 <div bind:this={element} class="ol-basemap-switcher ol-unselectable ol-control">
 	<BitsDropdown.Root>
-		<BitsDropdown.Trigger class="outline-none">
-			<Button
-				variant="secondary"
-				size="icon"
-				class="premium-control h-9 w-9"
-			>
-				<Layers class="text-primary h-5 w-5" />
-			</Button>
+		<BitsDropdown.Trigger>
+			{#snippet child({ props })}
+				<Button
+					{...props}
+					tag="span"
+					variant="secondary"
+					size="icon"
+					class="premium-control h-9 w-9"
+				>
+					<Layers class="text-primary h-5 w-5" />
+				</Button>
+			{/snippet}
 		</BitsDropdown.Trigger>
 
 		<BitsDropdown.Content

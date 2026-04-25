@@ -43,6 +43,7 @@
 <div bind:this={element} class="ol-compass ol-unselectable ol-control">
 	<Tooltip content="Reset North (Rotate with Alt+Shift+Drag)" side="right">
 		<Button
+			tag="span"
 			variant="secondary"
 			size="icon"
 			class="premium-control group relative h-9 w-9 rounded-full transition-all duration-300"

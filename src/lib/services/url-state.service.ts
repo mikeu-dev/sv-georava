@@ -5,6 +5,7 @@
 
 import LZString from 'lz-string';
 import { replaceState } from '$app/navigation';
+import { resolve } from '$app/paths';
 
 /**
  * Compresses a GeoJSON string into a URL-safe encoded string.
@@ -55,12 +56,14 @@ export function updateUrlHash(params: Record<string, string | null>): void {
 	const url = new URL(window.location.href);
 	url.hash = segments.length > 0 ? segments.join('&') : '';
 	
+	// Use SvelteKit's replaceState for shallow routing (updates URL without navigation)
 	try {
-		replaceState(url, {});
+		// @ts-expect-error - SvelteKit's replaceState is typed for known routes, but we need dynamic URL here
+		replaceState(resolve(url.pathname + url.search + url.hash), {});
 	} catch {
-		// Fallback for non-client environments or early calls
+		// Fallback to native history if router is not yet initialized or fails
 		if (typeof window !== 'undefined') {
-			window.history.replaceState(null, '', url.toString());
+			window.history.replaceState({}, '', url.href);
 		}
 	}
 }
