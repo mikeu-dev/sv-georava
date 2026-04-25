@@ -8,7 +8,7 @@
 	import VectorSource from 'ol/source/Vector.js';
 	import OSM from 'ol/source/OSM.js';
 	import XYZ from 'ol/source/XYZ.js';
-	import { fromLonLat } from 'ol/proj.js';
+	import { fromLonLat, toLonLat } from 'ol/proj.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
 	import { shiftKeyOnly } from 'ol/events/condition.js';
@@ -24,6 +24,7 @@
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
 	import { BASEMAPS } from '$lib/config/basemaps';
 	import { topoJsonDragFormat } from '$lib/services/ol-topojson-format';
+	import { updateUrlHash, getFromHash, parseMapHash } from '$lib/services/url-state.service';
 
 	import Compass from './Compass.svelte';
 	import BasemapSwitcher from './BasemapSwitcher.svelte';
@@ -122,7 +123,42 @@
 			vectorSource.addFeatures(mapStore.features as Feature<Geometry>[]);
 		}
 
+		// Initial View State from URL
+		const initialMapHash = getFromHash('map');
+		if (initialMapHash) {
+			const parsed = parseMapHash(initialMapHash);
+			if (parsed) {
+				map.getView().setCenter(fromLonLat([parsed.lon, parsed.lat]));
+				map.getView().setZoom(parsed.zoom);
+			}
+		}
+
+		// Sync Map -> URL on moveend
+		map.on('moveend', () => {
+			if (!map) return;
+			const view = map.getView();
+			const center = toLonLat(view.getCenter() || [0, 0]);
+			const zoom = view.getZoom() || DEFAULT_ZOOM;
+			const mapHash = `${zoom.toFixed(2)}/${center[1].toFixed(4)}/${center[0].toFixed(4)}`;
+			updateUrlHash({ map: mapHash });
+		});
+
+		// Sync URL -> Map on hashchange
+		const handleHashChange = () => {
+			if (!map) return;
+			const mapHash = getFromHash('map');
+			if (mapHash) {
+				const parsed = parseMapHash(mapHash);
+				if (parsed) {
+					map.getView().setCenter(fromLonLat([parsed.lon, parsed.lat]));
+					map.getView().setZoom(parsed.zoom);
+				}
+			}
+		};
+		window.addEventListener('hashchange', handleHashChange);
+
 		return () => {
+			window.removeEventListener('hashchange', handleHashChange);
 			map?.setTarget(undefined);
 		};
 	});

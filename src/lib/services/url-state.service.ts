@@ -37,28 +37,45 @@ function hashQuerySegments(): string[] {
 }
 
 /**
- * Merges `data=` into the URL hash without dropping other segments (e.g. `map=`).
+ * Merges state into the URL hash without dropping other segments.
  */
-export function updateUrlHash(encoded: string): void {
+export function updateUrlHash(params: Record<string, string | null>): void {
 	if (typeof window === 'undefined') return;
 
-	const kept = hashQuerySegments().filter((p) => !p.startsWith('data='));
-	if (encoded) {
-		kept.push(`data=${encoded}`);
-	}
+	let segments = hashQuerySegments();
+
+	Object.entries(params).forEach(([key, value]) => {
+		segments = segments.filter((p) => !p.startsWith(`${key}=`));
+		if (value) {
+			segments.push(`${key}=${value}`);
+		}
+	});
 
 	const url = new URL(window.location.href);
-	url.hash = kept.length > 0 ? kept.join('&') : '';
+	url.hash = segments.length > 0 ? segments.join('&') : '';
 	window.history.replaceState(null, '', url.toString());
 }
 
 /**
- * Reads compressed GeoJSON from `data=` in the URL hash.
+ * Reads a specific key from the URL hash.
  */
-export function getEncodedFromHash(): string | null {
+export function getFromHash(key: string): string | null {
 	if (typeof window === 'undefined') return null;
 
-	const dataPart = hashQuerySegments().find((p) => p.startsWith('data='));
-	if (!dataPart) return null;
-	return dataPart.slice(5);
+	const segment = hashQuerySegments().find((p) => p.startsWith(`${key}=`));
+	if (!segment) return null;
+	return segment.slice(key.length + 1);
+}
+
+/**
+ * Helper to parse map=z/lat/lon from hash
+ */
+export function parseMapHash(hash: string): { zoom: number; lat: number; lon: number } | null {
+	const parts = hash.split('/');
+	if (parts.length !== 3) return null;
+	const zoom = parseFloat(parts[0] || '');
+	const lat = parseFloat(parts[1] || '');
+	const lon = parseFloat(parts[2] || '');
+	if (isNaN(zoom) || isNaN(lat) || isNaN(lon)) return null;
+	return { zoom, lat, lon };
 }

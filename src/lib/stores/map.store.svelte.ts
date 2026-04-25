@@ -97,7 +97,7 @@ function createMapStore() {
 			parsed.forEach((f, i) => {
 				if (!f.getId()) f.setId(`f_sync_${Date.now()}_${i}`);
 			});
-			skipFeaturesSync = true;
+			skipFeaturesSync = false;
 			features = parsed;
 		} catch {
 			/* ignore parse errors */
@@ -117,7 +117,7 @@ function createMapStore() {
 			parsed.forEach((f, i) => {
 				if (!f.getId()) f.setId(`feature_editor_${Date.now()}_${i}`);
 			});
-			skipFeaturesSync = true;
+			skipFeaturesSync = false;
 			features = parsed;
 		} catch {
 			/* ignore parse errors */
