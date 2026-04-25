@@ -1,0 +1,52 @@
+{
+	"/": [
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/api/ai/intent": [
+		"src/routes/api/ai/intent/+server.ts"
+	],
+	"/api/auth/[...auth]": [
+		"src/routes/api/auth/[...auth]/+server.ts"
+	],
+	"/api/projects": [
+		"src/routes/api/projects/+server.ts"
+	],
+	"/api/projects/[id]": [
+		"src/routes/api/projects/[id]/+server.ts"
+	],
+	"/auth/login": [
+		"src/routes/auth/login/+page.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/auth/register": [
+		"src/routes/auth/register/+page.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/demo": [
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/demo/better-auth": [
+		"src/routes/demo/better-auth/+page.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/demo/better-auth/login": [
+		"src/routes/demo/better-auth/login/+page.server.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/demo/paraglide": [
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/demo/playwright": [
+		"src/routes/+layout.ts",
+		"src/routes/+layout.server.ts"
+	]
+}
