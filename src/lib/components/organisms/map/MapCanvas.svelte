@@ -422,13 +422,17 @@ import * as sphere from 'ol/sphere.js';
 		<SceneViewSwitcher {map} />
 	</div>
 
-	<!-- Right-Center: Analysis Tools -->
-	<div class="absolute right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 items-end">
+	<!-- Top-Center: Global Tools & Analysis -->
+	<div class="absolute left-1/2 top-4 z-40 -translate-x-1/2 flex flex-row gap-2 items-start">
 		<DrawingToolbar {map} />
 		<MeasurementController
 			{map}
 			activeType={mapStore.drawType as 'MeasureDistance' | 'MeasureArea' | null}
 		/>
+	</div>
+
+	<!-- Right-Center: Contextual Tools (Empty for now) -->
+	<div class="absolute right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 items-end">
 	</div>
 
 	<!-- Bottom-Right: Map Config -->

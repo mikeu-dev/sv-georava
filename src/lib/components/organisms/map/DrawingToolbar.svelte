@@ -64,7 +64,7 @@
 </script>
 
 <div bind:this={element} class="ol-drawing-tools ol-unselectable ol-control">
-	<div class="ol-panel flex flex-col gap-0.5">
+	<div class="ol-panel flex flex-row gap-0.5 items-center">
 		{#each tools as tool (tool.type || 'select')}
 			<IconButton
 				icon={tool.icon}
@@ -73,10 +73,10 @@
 				active={mapStore.drawType === tool.type}
 				variant={mapStore.drawType === tool.type ? 'accent' : 'ghost'}
 				class="h-8 w-8"
-				side="left"
+				side="bottom"
 			/>
 			{#if tool.type === 'Text' || tool.type === 'MeasureArea'}
-				<div class="bg-border/40 my-0.5 h-px w-full"></div>
+				<div class="bg-border/40 mx-0.5 w-px h-6"></div>
 			{/if}
 		{/each}
 	</div>

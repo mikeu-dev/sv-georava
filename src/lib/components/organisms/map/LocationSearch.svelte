@@ -162,8 +162,6 @@
 
 <style>
 	.ol-location-search {
-		top: 0.75rem;
-		left: 3.5rem;
 		width: 18rem;
 	}
 </style>
