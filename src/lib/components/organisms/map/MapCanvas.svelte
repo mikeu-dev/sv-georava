@@ -16,7 +16,7 @@
 	import Collection from 'ol/Collection.js';
 	import Overlay from 'ol/Overlay.js';
 	import BaseObject from 'ol/Object.js';
-	import { fromLonLat, toLonLat } from 'ol/proj.js';
+	import * as proj from 'ol/proj.js';
 	import { Style, Fill, Stroke, Icon, Circle as CircleStyle } from 'ol/style.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
@@ -107,7 +107,7 @@ import * as sphere from 'ol/sphere.js';
 			render: { Feature: RenderFeature },
 			extent,
 			sphere,
-			proj: { fromLonLat, toLonLat },
+			proj,
 			geom: { Point, LineString, Polygon, Circle },
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
 		};
@@ -127,7 +127,7 @@ import * as sphere from 'ol/sphere.js';
 			target: mapElement,
 			layers: [basemapLayer, vectorLayer],
 			view: new View({
-				center: fromLonLat(DEFAULT_CENTER),
+				center: proj.fromLonLat(DEFAULT_CENTER),
 				zoom: DEFAULT_ZOOM,
 				multiWorld: true
 			}),
@@ -186,7 +186,7 @@ import * as sphere from 'ol/sphere.js';
 		if (initialMapHash) {
 			const parsed = parseMapHash(initialMapHash);
 			if (parsed) {
-				map.getView().setCenter(fromLonLat([parsed.lon, parsed.lat]));
+				map.getView().setCenter(proj.fromLonLat([parsed.lon, parsed.lat]));
 				map.getView().setZoom(parsed.zoom);
 			}
 		}
@@ -195,7 +195,7 @@ import * as sphere from 'ol/sphere.js';
 		map.on('moveend', () => {
 			if (!map) return;
 			const view = map.getView();
-			const center = toLonLat(view.getCenter() || [0, 0]);
+			const center = proj.toLonLat(view.getCenter() || [0, 0]);
 			const zoom = view.getZoom() || DEFAULT_ZOOM;
 			const mapHash = `${zoom.toFixed(2)}/${center[1].toFixed(4)}/${center[0].toFixed(4)}`;
 			updateUrlHash({ map: mapHash });
@@ -208,7 +208,7 @@ import * as sphere from 'ol/sphere.js';
 			if (mapHash) {
 				const parsed = parseMapHash(mapHash);
 				if (parsed) {
-					map.getView().setCenter(fromLonLat([parsed.lon, parsed.lat]));
+					map.getView().setCenter(proj.fromLonLat([parsed.lon, parsed.lat]));
 					map.getView().setZoom(parsed.zoom);
 				}
 			}
