@@ -72,6 +72,8 @@ import * as sphere from 'ol/sphere.js';
 	import HomeButton from './HomeButton.svelte';
 	import ZoomExtent from './ZoomExtent.svelte';
 	import GeolocationTool from './GeolocationTool.svelte';
+	import { Plus, Minus } from 'lucide-svelte';
+	import IconButton from '../../molecules/IconButton.svelte';
 
 	let { children } = $props<{
 		children?: import('svelte').Snippet;
@@ -181,7 +183,7 @@ import * as sphere from 'ol/sphere.js';
 				zoom: DEFAULT_ZOOM,
 				multiWorld: true
 			}),
-			controls: defaultControls({ attribution: true, rotate: true, zoom: true }).extend([
+			controls: defaultControls({ attribution: true, rotate: true, zoom: false }).extend([
 				new ScaleLine({ units: 'metric' })
 			])
 		});
@@ -386,6 +388,18 @@ import * as sphere from 'ol/sphere.js';
 		mapStore.skipFeaturesSync = true;
 		mapStore.setFeatures(features as Feature<BaseGeometry>[]);
 	}
+
+	function handleZoom(delta: number) {
+		if (!map) return;
+		const view = map.getView();
+		const currentZoom = view.getZoom();
+		if (currentZoom !== undefined) {
+			view.animate({
+				zoom: currentZoom + delta,
+				duration: 250
+			});
+		}
+	}
 </script>
 
 <div class="relative h-full w-full overflow-hidden">
@@ -410,6 +424,23 @@ import * as sphere from 'ol/sphere.js';
 		<LocationSearch {map} />
 		
 		<div class="ol-panel flex flex-col gap-1 w-fit">
+			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+			<IconButton
+				icon={Plus as any}
+				label="Zoom In"
+				onclick={() => handleZoom(1)}
+				variant="secondary"
+				class="h-9 w-9"
+			/>
+			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+			<IconButton
+				icon={Minus as any}
+				label="Zoom Out"
+				onclick={() => handleZoom(-1)}
+				variant="secondary"
+				class="h-9 w-9"
+			/>
+			<div class="bg-border/40 mx-auto my-0.5 h-px w-6"></div>
 			<Compass {map} standalone={false} />
 			<HomeButton {map} standalone={false} />
 			<ZoomExtent {map} standalone={false} />

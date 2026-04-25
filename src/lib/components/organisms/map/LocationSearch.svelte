@@ -106,7 +106,7 @@
 	}
 </script>
 
-<div bind:this={containerElement} class="ol-location-search ol-unselectable ol-control">
+<div bind:this={containerElement} class="ol-location-search relative">
 	<div
 		class={cn(
 			'bg-background/80 border-border/50 flex items-center gap-2 rounded-lg border px-3 py-2 backdrop-blur-md transition-all duration-200',
