@@ -22,6 +22,7 @@
 	import * as proj from 'ol/proj.js';
 	import { Style, Fill, Stroke, Icon, Circle as CircleStyle, Text, RegularShape, Image as ImageStyle } from 'ol/style.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
+	import Control from 'ol/control/Control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
 	import { createBox } from 'ol/interaction/Draw.js';
 	import { shiftKeyOnly } from 'ol/events/condition.js';
@@ -86,6 +87,8 @@ import * as sphere from 'ol/sphere.js';
 
 	let isPopupOpen = $state(false);
 	let isLoading = $state(true);
+
+	let leftStackElement = $state<HTMLElement>();
 
 	// Initialize Map
 	onMount(() => {
@@ -152,6 +155,14 @@ import * as sphere from 'ol/sphere.js';
 			}),
 			interaction: createProxy({ Draw, Modify, Select, DragAndDrop, createBox })
 		};
+
+		// Add left stack as a single control
+		if (leftStackElement && map) {
+			const leftStackControl = new Control({
+				element: leftStackElement
+			});
+			map.addControl(leftStackControl);
+		}
 
 		vectorSource = new VectorSource({ wrapX: false });
 		vectorLayer = new VectorLayer({
@@ -397,10 +408,13 @@ import * as sphere from 'ol/sphere.js';
 	<!-- Map Overlay Components (Internal Controls) -->
 	<LocationSearch {map} />
 	<UserMenu {user} {map} />
-	<Compass {map} />
-	<HomeButton {map} />
-	<ZoomExtent {map} />
-	<GeolocationTool {map} />
+
+	<div class="ol-control-stack-left">
+		<Compass {map} standalone={false} />
+		<HomeButton {map} standalone={false} />
+		<ZoomExtent {map} standalone={false} />
+		<GeolocationTool {map} standalone={false} />
+	</div>
 
 	<SceneViewSwitcher {map} />
 	<DrawingToolbar {map} />

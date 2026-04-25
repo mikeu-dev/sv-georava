@@ -8,17 +8,18 @@
 	import { fromLonLat } from 'ol/proj.js';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
 
-	let { map } = $props<{ map: Map | undefined }>();
+	let { map, standalone = true } = $props<{ map: Map | undefined; standalone?: boolean }>();
 
 	let element = $state<HTMLElement>();
 
 	onMount(() => {
 		if (map && element) {
-			const homeControl = new Control({
-				element: element
-			});
-			map.addControl(homeControl);
-			return () => map.removeControl(homeControl);
+			const homeControl = standalone ? new Control({ element }) : null;
+			if (homeControl) map.addControl(homeControl);
+			
+			return () => {
+				if (homeControl) map.removeControl(homeControl);
+			};
 		}
 	});
 
@@ -32,13 +33,13 @@
 	}
 </script>
 
-<div bind:this={element} class="ol-home-button ol-unselectable ol-control">
+<div bind:this={element} class={standalone ? "ol-home-button ol-unselectable ol-control" : "ol-unselectable"}>
 	<Tooltip content="Reset View" side="right">
 		<Button
 			tag="span"
 			variant="secondary"
 			size="icon"
-			class="premium-control"
+			class="premium-control h-9 w-9 rounded-full transition-all duration-300"
 			onclick={handleGoHome}
 		>
 			<Home class="h-4 w-4" />

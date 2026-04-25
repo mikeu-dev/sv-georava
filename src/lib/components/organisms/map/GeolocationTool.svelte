@@ -12,7 +12,7 @@
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 
-	let { map } = $props<{ map: Map | undefined }>();
+	let { map, standalone = true } = $props<{ map: Map | undefined; standalone?: boolean }>();
 
 	let element = $state<HTMLElement>();
 	let geolocation = $state<Geolocation>();
@@ -22,10 +22,8 @@
 
 	onMount(() => {
 		if (map && element) {
-			const geoControl = new Control({
-				element: element
-			});
-			map.addControl(geoControl);
+			const geoControl = standalone ? new Control({ element }) : null;
+			if (geoControl) map.addControl(geoControl);
 
 			geolocation = new Geolocation({
 				trackingOptions: {
@@ -68,7 +66,7 @@
 			});
 
 			return () => {
-				map?.removeControl(geoControl);
+				if (geoControl) map?.removeControl(geoControl);
 				map?.removeLayer(vectorLayer);
 			};
 		}
@@ -80,13 +78,13 @@
 	}
 </script>
 
-<div bind:this={element} class="ol-geolocation ol-unselectable ol-control">
+<div bind:this={element} class={standalone ? "ol-geolocation ol-unselectable ol-control" : "ol-unselectable"}>
 	<Tooltip content="My Location" side="right">
 		<Button
 			tag="span"
 			variant="secondary"
 			size="icon"
-			class="premium-control {isTracking ? 'text-primary' : ''}"
+			class="premium-control h-9 w-9 rounded-full transition-all duration-300 {isTracking ? 'text-primary' : ''}"
 			onclick={toggleTracking}
 		>
 			<Navigation class="h-4 w-4" />

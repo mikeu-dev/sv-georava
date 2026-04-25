@@ -94,7 +94,7 @@
 			tag="span"
 			variant="secondary"
 			size="icon"
-			class="premium-control h-9 w-9"
+			class="premium-control h-9 w-9 rounded-full transition-all duration-300"
 			onclick={handleScreenshot}
 		>
 			<Camera class="text-primary h-4 w-4" />

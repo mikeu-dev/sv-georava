@@ -176,10 +176,15 @@ body {
 
 /* ─── Custom Controls Positioning ─── */
 /* ─── Custom Controls Positioning ─── */
-.ol-compass { top: 6.5rem; left: 0.75rem; }
-.ol-home-button { top: 9.25rem; left: 0.75rem; }
-.ol-zoom-extent { top: 12.0rem; left: 0.75rem; }
-.ol-geolocation { top: 14.75rem; left: 0.75rem; }
+.ol-control-stack-left {
+	position: absolute;
+	top: 6.5rem;
+	left: 0.75rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	z-index: 40;
+}
 
 .ol-user-menu { top: 0.75rem; right: 0.75rem; }
 .ol-scene-view-switcher { top: 3.5rem; right: 0.75rem; }

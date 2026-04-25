@@ -49,7 +49,7 @@
 					tag="span"
 					variant="secondary"
 					size="icon"
-					class="premium-control flex h-9 w-9 flex-col items-center justify-center gap-0.5"
+					class="premium-control flex h-9 w-9 flex-col items-center justify-center gap-0.5 rounded-full transition-all duration-300"
 				>
 					{#if is3d}
 						<Globe class="text-primary h-4 w-4" />

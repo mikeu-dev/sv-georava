@@ -6,17 +6,18 @@
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 
-	let { map } = $props<{ map: Map | undefined }>();
+	let { map, standalone = true } = $props<{ map: Map | undefined; standalone?: boolean }>();
 
 	let element = $state<HTMLElement>();
 
 	onMount(() => {
 		if (map && element) {
-			const zoomExtentControl = new Control({
-				element: element
-			});
-			map.addControl(zoomExtentControl);
-			return () => map.removeControl(zoomExtentControl);
+			const zoomExtentControl = standalone ? new Control({ element }) : null;
+			if (zoomExtentControl) map.addControl(zoomExtentControl);
+			
+			return () => {
+				if (zoomExtentControl) map.removeControl(zoomExtentControl);
+			};
 		}
 	});
 
@@ -44,13 +45,13 @@
 	}
 </script>
 
-<div bind:this={element} class="ol-zoom-extent ol-unselectable ol-control">
+<div bind:this={element} class={standalone ? "ol-zoom-extent ol-unselectable ol-control" : "ol-unselectable"}>
 	<Tooltip content="Zoom to Data Extent" side="right">
 		<Button
 			tag="span"
 			variant="secondary"
 			size="icon"
-			class="premium-control"
+			class="premium-control h-9 w-9 rounded-full transition-all duration-300"
 			onclick={handleZoomToExtent}
 		>
 			<Maximize class="h-4 w-4" />

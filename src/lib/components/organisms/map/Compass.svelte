@@ -6,17 +6,21 @@
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 
-	let { map } = $props<{ map: Map | undefined }>();
+	let { map, standalone = true } = $props<{ map: Map | undefined; standalone?: boolean }>();
 
 	let element = $state<HTMLElement>();
 	let rotation = $state(0);
 
 	onMount(() => {
 		if (map && element) {
-			const compassControl = new Control({
-				element: element
-			});
-			map.addControl(compassControl);
+			let compassControl: Control | undefined;
+			
+			if (standalone) {
+				compassControl = new Control({
+					element: element
+				});
+				map.addControl(compassControl);
+			}
 
 			const updateRotation = () => {
 				rotation = map.getView().getRotation();
@@ -25,7 +29,7 @@
 			map.on('postrender', updateRotation);
 
 			return () => {
-				map.removeControl(compassControl);
+				if (compassControl) map.removeControl(compassControl);
 				map.un('postrender', updateRotation);
 			};
 		}
@@ -40,7 +44,7 @@
 	}
 </script>
 
-<div bind:this={element} class="ol-compass ol-unselectable ol-control">
+<div bind:this={element} class={standalone ? "ol-compass ol-unselectable ol-control" : "ol-unselectable"}>
 	<Tooltip content="Reset North (Rotate with Alt+Shift+Drag)" side="right">
 		<Button
 			tag="span"
