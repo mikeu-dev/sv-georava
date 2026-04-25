@@ -18,6 +18,7 @@
 		ol?: {
 			style?: unknown;
 			structs?: unknown;
+			render?: unknown;
 		};
 		olcs?: {
 			OLCesium: new (options: { map: Map }) => {
@@ -67,7 +68,7 @@
 				if (!win.olcs) {
 					// Wait for MapCanvas to define window.ol
 					let attempts = 0;
-					while ((!win.ol || !win.ol.style || !win.ol.structs) && attempts < 50) {
+					while ((!win.ol || !win.ol.style || !win.ol.structs || !win.ol.render) && attempts < 50) {
 						await new Promise((r) => setTimeout(r, 100));
 						attempts++;
 					}

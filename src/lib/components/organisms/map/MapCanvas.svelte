@@ -24,6 +24,9 @@ import WKT from 'ol/format/WKT.js';
 import LRUCache from 'ol/structs/LRUCache.js';
 import Observable from 'ol/Observable.js';
 import * as events from 'ol/events.js';
+import RenderFeature from 'ol/render/Feature.js';
+import * as extent from 'ol/extent.js';
+import * as sphere from 'ol/sphere.js';
 	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
 	import type { SelectEvent } from 'ol/interaction/Select';
@@ -94,6 +97,9 @@ import * as events from 'ol/events.js';
 			format: { GeoJSON, MVT, WKT },
 			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle },
 			structs: { LRUCache },
+			render: { Feature: RenderFeature },
+			extent,
+			sphere,
 			proj: { fromLonLat, toLonLat },
 			geom: { Point, LineString, Polygon, Circle },
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
