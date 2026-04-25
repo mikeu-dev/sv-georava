@@ -11,6 +11,7 @@
 	import { fromLonLat, toLonLat } from 'ol/proj.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
+	import { createBox } from 'ol/interaction/Draw.js';
 	import { shiftKeyOnly } from 'ol/events/condition.js';
 	import GeoJSON from 'ol/format/GeoJSON.js';
 	import type { Feature } from 'ol';
@@ -19,6 +20,10 @@
 	import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop';
 	import type { DrawEvent } from 'ol/interaction/Draw';
 	import type MapBrowserEvent from 'ol/MapBrowserEvent';
+	import Point from 'ol/geom/Point.js';
+	import LineString from 'ol/geom/LineString.js';
+	import Polygon from 'ol/geom/Polygon.js';
+	import Circle from 'ol/geom/Circle.js';
 
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
@@ -58,6 +63,18 @@
 	// Initialize Map
 	onMount(() => {
 		if (!mapElement) return;
+
+		// Expose ol globally for ol-cesium CDN compatibility
+		// @ts-expect-error - ol is not defined on window
+		window.ol = {
+			Map,
+			View,
+			layer: { Tile: TileLayer, Vector: VectorLayer },
+			source: { Vector: VectorSource, OSM, XYZ },
+			proj: { fromLonLat, toLonLat },
+			geom: { Point, LineString, Polygon, Circle },
+			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
+		};
 
 		vectorSource = new VectorSource({ wrapX: false });
 		vectorLayer = new VectorLayer({
@@ -195,11 +212,26 @@
 		const type = mapStore.drawType;
 		if (!type || type === 'Edit' || type === 'Delete' || type.startsWith('Measure')) return;
 
-		const olType = type as import('ol/geom/Geometry').Type;
-		const draw = new Draw({
+		let olType: import('ol/geom/Geometry').Type;
+		let drawOptions: import('ol/interaction/Draw').Options = {
 			source: vectorSource,
-			type: olType
-		});
+			type: 'Point' // fallback
+		};
+
+		if (type === 'Rectangle') {
+			olType = 'Circle';
+			drawOptions.geometryFunction = createBox();
+		} else if (type === 'Freehand') {
+			olType = 'LineString';
+			drawOptions.freehand = true;
+		} else if (type === 'Text') {
+			olType = 'Point';
+		} else {
+			olType = type as import('ol/geom/Geometry').Type;
+		}
+
+		drawOptions.type = olType;
+		const draw = new Draw(drawOptions);
 
 		draw.on('drawend', (e: DrawEvent) => {
 			const feature = e.feature;

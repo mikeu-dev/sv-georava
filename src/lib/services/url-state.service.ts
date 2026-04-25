@@ -4,6 +4,7 @@
  */
 
 import LZString from 'lz-string';
+import { replaceState } from '$app/navigation';
 
 /**
  * Compresses a GeoJSON string into a URL-safe encoded string.
@@ -53,7 +54,15 @@ export function updateUrlHash(params: Record<string, string | null>): void {
 
 	const url = new URL(window.location.href);
 	url.hash = segments.length > 0 ? segments.join('&') : '';
-	window.history.replaceState(null, '', url.toString());
+	
+	try {
+		replaceState(url, {});
+	} catch {
+		// Fallback for non-client environments or early calls
+		if (typeof window !== 'undefined') {
+			window.history.replaceState(null, '', url.toString());
+		}
+	}
 }
 
 /**

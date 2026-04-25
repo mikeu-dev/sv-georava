@@ -15,6 +15,7 @@
 
 	interface CesiumWin extends Window {
 		Cesium?: CesiumGlobal;
+		ol?: unknown;
 		olcs?: {
 			OLCesium: new (options: { map: Map }) => {
 				getCesiumScene: () => {
@@ -33,21 +34,48 @@
 	let ol3d: { setEnabled: (enabled: boolean) => void } | null = null;
 	let isInitialized = false;
 
+	async function loadScript(url: string) {
+		return new Promise((resolve, reject) => {
+			if (typeof document === 'undefined') return resolve(null);
+			const script = document.createElement('script');
+			script.src = url;
+			script.async = true;
+			script.onload = () => resolve(null);
+			script.onerror = reject;
+			document.head.appendChild(script);
+		});
+	}
+
 	$effect(() => {
 		if (!map || typeof window === 'undefined') return;
 
 		const initCesium = async () => {
 			const win = window as unknown as CesiumWin;
-			const Cesium = win.Cesium;
-			const OLCesium = win.olcs?.OLCesium;
-
-			if (!Cesium || !OLCesium) {
-				return;
-			}
-
+			
 			if (isInitialized) return;
 
 			try {
+				// Ensure Cesium is loaded
+				if (!win.Cesium) {
+					await loadScript('https://cesium.com/downloads/cesiumjs/releases/1.113/Build/Cesium/Cesium.js');
+				}
+
+				// Ensure ol-cesium is loaded and ol is defined
+				if (!win.olcs) {
+					// Wait for MapCanvas to define window.ol
+					let attempts = 0;
+					while (!win.ol && attempts < 50) {
+						await new Promise((r) => setTimeout(r, 100));
+						attempts++;
+					}
+					await loadScript('https://cdn.jsdelivr.net/npm/ol-cesium@2.17.0/dist/olcesium.js');
+				}
+
+				const Cesium = win.Cesium;
+				const OLCesium = win.olcs?.OLCesium;
+
+				if (!Cesium || !OLCesium) return;
+
 				const ol3dInstance = new OLCesium({ map: map });
 				ol3d = ol3dInstance;
 
@@ -72,15 +100,7 @@
 			}
 		};
 
-		const interval = setInterval(() => {
-			const win = window as unknown as CesiumWin;
-			if (win.Cesium && win.olcs?.OLCesium) {
-				initCesium();
-				clearInterval(interval);
-			}
-		}, 500);
-
-		return () => clearInterval(interval);
+		initCesium();
 	});
 
 	$effect(() => {

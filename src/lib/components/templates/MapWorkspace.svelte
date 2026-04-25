@@ -2,7 +2,6 @@
 	import Sidebar from '../organisms/sidebar/Sidebar.svelte';
 	import JsonEditorPanel from '../organisms/sidebar/JsonEditorPanel.svelte';
 	import MapCanvas from '../organisms/map/MapCanvas.svelte';
-	import DrawingToolbar from '../organisms/map/DrawingToolbar.svelte';
 	import { uiStore } from '$lib/stores/ui.store.svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { onMount } from 'svelte';
@@ -98,9 +97,7 @@
 
 	<!-- Map Area -->
 	<main class="relative h-full flex-1 overflow-hidden">
-		<MapCanvas {user}>
-			<DrawingToolbar />
-		</MapCanvas>
+		<MapCanvas {user} />
 
 		<!-- Notifications / Overlays -->
 		{#if uiStore.isCopied}
