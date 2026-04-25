@@ -57,9 +57,4 @@
 	</Tooltip>
 </div>
 
-<style>
-	.ol-compass {
-		top: 3.5rem;
-		left: 0.75rem;
-	}
-</style>
+

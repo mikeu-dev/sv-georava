@@ -121,9 +121,4 @@
 	</Tooltip>
 </div>
 
-<style>
-	.ol-scene-view-switcher {
-		top: 8.25rem;
-		right: 0.75rem;
-	}
-</style>
+

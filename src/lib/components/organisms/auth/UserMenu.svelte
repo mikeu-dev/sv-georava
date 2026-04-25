@@ -98,9 +98,4 @@
 	{/if}
 </div>
 
-<style>
-	.ol-user-menu {
-		top: 0.75rem;
-		right: 0.75rem;
-	}
-</style>
+

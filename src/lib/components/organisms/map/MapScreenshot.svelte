@@ -101,9 +101,4 @@
 	</Tooltip>
 </div>
 
-<style>
-	.ol-screenshot {
-		right: 0.75rem;
-		bottom: 0.75rem;
-	}
-</style>
+

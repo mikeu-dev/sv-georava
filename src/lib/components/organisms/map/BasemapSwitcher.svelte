@@ -113,9 +113,4 @@
 	</BitsDropdown.Root>
 </div>
 
-<style>
-	.ol-basemap-switcher {
-		right: 0.75rem;
-		bottom: 4.5rem;
-	}
-</style>
+

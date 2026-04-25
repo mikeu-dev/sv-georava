@@ -79,12 +79,4 @@
 	</div>
 </div>
 
-<style>
-	.status-bar {
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 0.75rem;
-		padding: 0.4rem 1.25rem;
-		min-width: 320px;
-	}
-</style>
+
