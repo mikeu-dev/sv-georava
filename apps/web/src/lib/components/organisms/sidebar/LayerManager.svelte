@@ -12,9 +12,7 @@
 	];
 
 	function setBasemap(id: BasemapId) {
-		// In a real app, you'd update the map layer here
-		// For now we just update the store
-		console.log('Setting basemap to:', id);
+		mapStore.activeBasemap = id;
 	}
 </script>
 

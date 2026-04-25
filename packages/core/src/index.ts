@@ -8,4 +8,5 @@ export * from './export/export.js';
 export * from './import/import.js';
 export * from './geolocation/geolocation.js';
 export * from './measurement/measurement.js';
+export * from './geocoding/geocoding.js';
 export * from './types.js';

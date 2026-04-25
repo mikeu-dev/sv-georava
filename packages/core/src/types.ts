@@ -14,15 +14,6 @@ export interface AnalysisResult {
   readonly value: string;
 }
 
-export interface NominatimHit {
-  readonly place_id?: number;
-  readonly display_name?: string;
-  readonly lat?: string;
-  readonly lon?: string;
-  readonly type?: string;
-  readonly boundingbox?: string[];
-}
-
 export type ExportFormat = 'geojson' | 'kml' | 'kmz' | 'topojson';
 
 export interface ExportResult {

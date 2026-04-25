@@ -3,14 +3,13 @@
 	import { uiStore } from '$lib/stores/ui.store.svelte';
 	import Button from '../../atoms/Button.svelte';
 	import { Wand2, Info } from 'lucide-svelte';
-	import * as turf from '@turf/turf';
-	import type { Feature as GeoJSONFeature } from 'geojson';
+	import { SpatialService, type BufferUnit } from '@geovara/core';
 	import GeoJSON from 'ol/format/GeoJSON.js';
 	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
 
 	let bufferDistance = $state(100);
-	let bufferUnit = $state<'meters' | 'kilometers' | 'miles'>('meters');
+	let bufferUnit = $state<BufferUnit>('meters');
 
 	const geojsonFormat = new GeoJSON();
 
@@ -25,10 +24,8 @@
 			// Convert OL feature to GeoJSON
 			const geojson = geojsonFormat.writeFeatureObject(selectedFeature);
 
-			// Apply Turf Buffer
-			const buffered = turf.buffer(geojson as GeoJSONFeature, bufferDistance, {
-				units: bufferUnit
-			});
+			// Apply Core SpatialService Buffer
+			const buffered = SpatialService.createBuffer(geojson as any, bufferDistance, bufferUnit);
 
 			// Convert back to OL feature
 			const newFeatures = geojsonFormat.readFeatures(buffered);

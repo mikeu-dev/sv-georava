@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Search, MapPin, Loader2, X } from 'lucide-svelte';
-	import { nominatimSearchUrl, nominatimSearchResults } from '$lib/services/nominatim.service';
-	import type { NominatimHit } from '$lib/types/spatial.types';
+	import { nominatimSearchResults } from '$lib/services/nominatim.service';
+	import type { NominatimHit } from '@geovara/core';
 	import type { Map } from '@geovara/core';
 	import Control from 'ol/control/Control';
 	import { fromLonLat } from 'ol/proj.js';
@@ -48,13 +48,11 @@
 
 		isLoading = true;
 		try {
-			const url = nominatimSearchUrl({
-				format: 'json',
+			const data = await nominatimSearchResults({
 				q,
 				limit: 5,
 				addressdetails: 0
 			});
-			const data = await nominatimSearchResults(url);
 			results = data;
 			isOpen = data.length > 0;
 		} catch (err) {
