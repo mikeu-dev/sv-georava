@@ -1,5 +1,8 @@
 <script lang="ts">
 	import IconButton from '../../molecules/IconButton.svelte';
+	import { onMount } from 'svelte';
+	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import {
 		MousePointer2,
 		MapPin,
@@ -19,6 +22,20 @@
 	import type { Icon } from 'lucide-svelte';
 
 	type LucideIcon = Component<ComponentProps<Icon>>;
+
+	let { map } = $props<{ map: Map | undefined }>();
+
+	let element = $state<HTMLElement>();
+
+	onMount(() => {
+		if (map && element) {
+			const drawControl = new Control({
+				element: element
+			});
+			map.addControl(drawControl);
+			return () => map.removeControl(drawControl);
+		}
+	});
 
 	interface ToolItem {
 		type: DrawType | null;
@@ -46,7 +63,7 @@
 	}
 </script>
 
-<div class="drawing-tools ol-unselectable ol-control pointer-events-auto">
+<div bind:this={element} class="drawing-tools ol-unselectable ol-control">
 	<div class="drawing-controls flex flex-col gap-1">
 		{#each tools as tool (tool.type || 'select')}
 			<IconButton
@@ -64,3 +81,10 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	.drawing-tools {
+		top: 12.5rem;
+		right: 0.75rem;
+	}
+</style>

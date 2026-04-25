@@ -3,6 +3,7 @@
 	import { nominatimSearchUrl, nominatimSearchResults } from '$lib/services/nominatim.service';
 	import type { NominatimHit } from '$lib/types/spatial.types';
 	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import { fromLonLat } from 'ol/proj.js';
 	import { onMount } from 'svelte';
 	import { cn } from '$lib/utils/cn';
@@ -18,13 +19,24 @@
 	let containerElement = $state<HTMLDivElement>();
 
 	onMount(() => {
-		const handleClickOutside = (e: MouseEvent) => {
-			if (containerElement && !containerElement.contains(e.target as Node)) {
-				isOpen = false;
-			}
-		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
+		if (map && containerElement) {
+			const searchControl = new Control({
+				element: containerElement
+			});
+			map.addControl(searchControl);
+
+			const handleClickOutside = (e: MouseEvent) => {
+				if (containerElement && !containerElement.contains(e.target as Node)) {
+					isOpen = false;
+				}
+			};
+			document.addEventListener('mousedown', handleClickOutside);
+
+			return () => {
+				map.removeControl(searchControl);
+				document.removeEventListener('mousedown', handleClickOutside);
+			};
+		}
 	});
 
 	async function searchLocation(q: string) {
@@ -94,7 +106,7 @@
 	}
 </script>
 
-<div bind:this={containerElement} class="pointer-events-auto absolute top-3 left-12 z-40 w-72">
+<div bind:this={containerElement} class="ol-location-search ol-unselectable ol-control">
 	<div
 		class={cn(
 			'bg-background/80 border-border/50 flex items-center gap-2 rounded-lg border px-3 py-2 backdrop-blur-md transition-all duration-200',
@@ -147,3 +159,11 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	.ol-location-search {
+		top: 0.75rem;
+		left: 3.5rem;
+		width: 18rem;
+	}
+</style>

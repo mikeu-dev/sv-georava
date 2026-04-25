@@ -1,13 +1,29 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Layers, Check } from 'lucide-svelte';
 	import { DropdownMenu as BitsDropdown } from 'bits-ui';
+	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { BASEMAPS } from '$lib/config/basemaps';
 	import Button from '$lib/components/atoms/Button.svelte';
 	import { cn } from '$lib/utils/cn';
 
+	let { map } = $props<{ map: Map | undefined }>();
+
+	let element = $state<HTMLElement>();
 	let activeBasemap = $derived(mapStore.activeBasemap);
 	let opacity = $state(mapStore.basemapOpacity);
+
+	onMount(() => {
+		if (map && element) {
+			const basemapControl = new Control({
+				element: element
+			});
+			map.addControl(basemapControl);
+			return () => map.removeControl(basemapControl);
+		}
+	});
 
 	function handleBasemapChange(id: string) {
 		mapStore.activeBasemap = id as import('$lib/types/map.types').BasemapId;
@@ -20,7 +36,7 @@
 	}
 </script>
 
-<div class="pointer-events-auto z-10 flex flex-col gap-2">
+<div bind:this={element} class="ol-basemap-switcher ol-unselectable ol-control">
 	<BitsDropdown.Root>
 		<BitsDropdown.Trigger class="outline-none">
 			<Button
@@ -96,3 +112,10 @@
 		</BitsDropdown.Content>
 	</BitsDropdown.Root>
 </div>
+
+<style>
+	.ol-basemap-switcher {
+		right: 0.75rem;
+		bottom: 4.5rem;
+	}
+</style>

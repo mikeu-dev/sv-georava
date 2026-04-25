@@ -1,22 +1,34 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Compass as CompassIcon } from 'lucide-svelte';
 	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 
 	let { map } = $props<{ map: Map | undefined }>();
 
+	let element = $state<HTMLElement>();
 	let rotation = $state(0);
 
-	$effect(() => {
-		if (!map) return;
+	onMount(() => {
+		if (map && element) {
+			const compassControl = new Control({
+				element: element
+			});
+			map.addControl(compassControl);
 
-		const updateRotation = () => {
-			rotation = map.getView().getRotation();
-		};
+			const updateRotation = () => {
+				rotation = map.getView().getRotation();
+			};
 
-		map.on('postrender', updateRotation);
-		return () => map.un('postrender', updateRotation);
+			map.on('postrender', updateRotation);
+
+			return () => {
+				map.removeControl(compassControl);
+				map.un('postrender', updateRotation);
+			};
+		}
 	});
 
 	function handleResetRotation() {
@@ -28,7 +40,7 @@
 	}
 </script>
 
-<div class="pointer-events-auto z-10 flex flex-col gap-2">
+<div bind:this={element} class="ol-compass ol-unselectable ol-control">
 	<Tooltip content="Reset North (Rotate with Alt+Shift+Drag)" side="left">
 		<Button
 			variant="secondary"
@@ -44,3 +56,10 @@
 		</Button>
 	</Tooltip>
 </div>
+
+<style>
+	.ol-compass {
+		top: 4.5rem;
+		right: 0.75rem;
+	}
+</style>

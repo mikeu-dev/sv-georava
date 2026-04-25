@@ -1,13 +1,29 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Check, Globe, Map as MapIcon } from 'lucide-svelte';
 	import { DropdownMenu as BitsDropdown } from 'bits-ui';
+	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 	import type { ProjectionCode } from '$lib/types/map.types';
 
+	let { map } = $props<{ map: Map | undefined }>();
+
+	let element = $state<HTMLElement>();
 	let is3d = $derived(mapStore.is3d);
 	let projection = $derived(mapStore.projection);
+
+	onMount(() => {
+		if (map && element) {
+			const sceneControl = new Control({
+				element: element
+			});
+			map.addControl(sceneControl);
+			return () => map.removeControl(sceneControl);
+		}
+	});
 
 	function handleSelectMode(mode: '3d' | '3857' | '4326') {
 		if (mode === '3d') {
@@ -25,7 +41,7 @@
 	});
 </script>
 
-<div class="pointer-events-auto z-10 flex flex-col gap-2">
+<div bind:this={element} class="ol-scene-view-switcher ol-unselectable ol-control">
 	<Tooltip content="Map View & Projection" side="left">
 		<BitsDropdown.Root>
 			<BitsDropdown.Trigger class="outline-none">
@@ -104,3 +120,10 @@
 		</BitsDropdown.Root>
 	</Tooltip>
 </div>
+
+<style>
+	.ol-scene-view-switcher {
+		top: 8.25rem;
+		right: 0.75rem;
+	}
+</style>

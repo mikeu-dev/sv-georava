@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import { toLonLat } from 'ol/proj.js';
 	import type { ProjectionCode } from '$lib/types/map.types';
 
@@ -9,38 +11,47 @@
 		projection: ProjectionCode;
 	}>();
 
+	let element = $state<HTMLElement>();
 	let coords = $state({ lon: '0.0000', lat: '0.0000' });
 	let zoom = $state('0.0');
 
-	$effect(() => {
-		if (!map) return;
+	onMount(() => {
+		if (map && element) {
+			const statusControl = new Control({
+				element: element
+			});
+			map.addControl(statusControl);
 
-		const updateStatus = () => {
-			const view = map.getView();
-			const center = view.getCenter();
-			const currentZoom = view.getZoom();
+			const updateStatus = () => {
+				const view = map.getView();
+				const center = view.getCenter();
+				const currentZoom = view.getZoom();
 
-			if (center) {
-				const lonLat = toLonLat(center, projection);
-				coords = {
-					lon: lonLat[0].toFixed(4),
-					lat: lonLat[1].toFixed(4)
-				};
-			}
+				if (center) {
+					const lonLat = toLonLat(center, projection);
+					coords = {
+						lon: lonLat[0].toFixed(4),
+						lat: lonLat[1].toFixed(4)
+					};
+				}
 
-			if (currentZoom !== undefined) {
-				zoom = currentZoom.toFixed(1);
-			}
-		};
+				if (currentZoom !== undefined) {
+					zoom = currentZoom.toFixed(1);
+				}
+			};
 
-		map.on('moveend', updateStatus);
-		updateStatus(); // Initial call
+			map.on('moveend', updateStatus);
+			updateStatus(); // Initial call
 
-		return () => map.un('moveend', updateStatus);
+			return () => {
+				map.removeControl(statusControl);
+				map.un('moveend', updateStatus);
+			};
+		}
 	});
 </script>
 
-<div class="status-bar ol-unselectable ol-control pointer-events-auto">
+<div bind:this={element} class="status-bar ol-unselectable ol-control">
 	<div class="flex w-full items-center justify-center gap-6 px-2">
 		<div class="flex items-center gap-1.5">
 			<span class="text-muted-foreground text-[9px] font-bold tracking-wider uppercase">Lon</span>
@@ -67,3 +78,13 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.status-bar {
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 0.75rem;
+		padding: 0.4rem 1.25rem;
+		min-width: 320px;
+	}
+</style>

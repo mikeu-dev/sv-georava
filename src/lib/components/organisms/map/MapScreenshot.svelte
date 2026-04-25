@@ -1,10 +1,24 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Camera } from 'lucide-svelte';
 	import type Map from 'ol/Map.js';
+	import Control from 'ol/control/Control';
 	import Button from '$lib/components/atoms/Button.svelte';
 	import Tooltip from '$lib/components/atoms/Tooltip.svelte';
 
 	let { map } = $props<{ map: Map | undefined }>();
+
+	let element = $state<HTMLElement>();
+
+	onMount(() => {
+		if (map && element) {
+			const screenshotControl = new Control({
+				element: element
+			});
+			map.addControl(screenshotControl);
+			return () => map.removeControl(screenshotControl);
+		}
+	});
 
 	function handleScreenshot() {
 		if (!map) return;
@@ -74,13 +88,22 @@
 	}
 </script>
 
-<Tooltip content="Export as Image" side="left">
-	<Button
-		variant="secondary"
-		size="icon"
-		class="border-border/50 bg-background/80 hover:bg-background h-10 w-10 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
-		onclick={handleScreenshot}
-	>
-		<Camera class="text-primary h-4 w-4" />
-	</Button>
-</Tooltip>
+<div bind:this={element} class="ol-screenshot ol-unselectable ol-control">
+	<Tooltip content="Export as Image" side="left">
+		<Button
+			variant="secondary"
+			size="icon"
+			class="border-border/50 bg-background/80 hover:bg-background h-10 w-10 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
+			onclick={handleScreenshot}
+		>
+			<Camera class="text-primary h-4 w-4" />
+		</Button>
+	</Tooltip>
+</div>
+
+<style>
+	.ol-screenshot {
+		right: 0.75rem;
+		bottom: 0.75rem;
+	}
+</style>
