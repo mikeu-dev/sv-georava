@@ -80,8 +80,8 @@ declare module '$env/static/private' {
 	export const TERM: string;
 	export const npm_config_node_gyp: string;
 	export const PATH: string;
-	export const NODE: string;
 	export const npm_package_name: string;
+	export const NODE: string;
 	export const XDG_RUNTIME_DIR: string;
 	export const npm_config_frozen_lockfile: string;
 	export const DISPLAY: string;
@@ -93,8 +93,8 @@ declare module '$env/static/private' {
 	export const npm_lifecycle_script: string;
 	export const SHELL: string;
 	export const npm_package_version: string;
-	export const npm_config_verify_deps_before_run: string;
 	export const npm_lifecycle_event: string;
+	export const npm_config_verify_deps_before_run: string;
 	export const NODE_PATH: string;
 	export const npm_config_npm_globalconfig: string;
 	export const P9K_SSH: string;
@@ -105,15 +105,13 @@ declare module '$env/static/private' {
 	export const NVM_CD_FLAGS: string;
 	export const ZDOTDIR: string;
 	export const npm_config_recursive: string;
-	export const PNPM_SCRIPT_SRC_DIR: string;
 	export const npm_config__jsr_registry: string;
 	export const npm_command: string;
+	export const PNPM_SCRIPT_SRC_DIR: string;
 	export const WSL2_GUI_APPS_ENABLED: string;
 	export const HOSTTYPE: string;
 	export const WSLENV: string;
 	export const INIT_CWD: string;
-	export const NODE_ENV: string;
-	export const PW_EXPERIMENTAL_SERVICE_WORKER_NETWORK_EVENTS: string;
 }
 
 /**
@@ -242,8 +240,8 @@ declare module '$env/dynamic/private' {
 		TERM: string;
 		npm_config_node_gyp: string;
 		PATH: string;
-		NODE: string;
 		npm_package_name: string;
+		NODE: string;
 		XDG_RUNTIME_DIR: string;
 		npm_config_frozen_lockfile: string;
 		DISPLAY: string;
@@ -255,8 +253,8 @@ declare module '$env/dynamic/private' {
 		npm_lifecycle_script: string;
 		SHELL: string;
 		npm_package_version: string;
-		npm_config_verify_deps_before_run: string;
 		npm_lifecycle_event: string;
+		npm_config_verify_deps_before_run: string;
 		NODE_PATH: string;
 		npm_config_npm_globalconfig: string;
 		P9K_SSH: string;
@@ -267,15 +265,13 @@ declare module '$env/dynamic/private' {
 		NVM_CD_FLAGS: string;
 		ZDOTDIR: string;
 		npm_config_recursive: string;
-		PNPM_SCRIPT_SRC_DIR: string;
 		npm_config__jsr_registry: string;
 		npm_command: string;
+		PNPM_SCRIPT_SRC_DIR: string;
 		WSL2_GUI_APPS_ENABLED: string;
 		HOSTTYPE: string;
 		WSLENV: string;
 		INIT_CWD: string;
-		NODE_ENV: string;
-		PW_EXPERIMENTAL_SERVICE_WORKER_NETWORK_EVENTS: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

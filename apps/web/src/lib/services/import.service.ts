@@ -1,19 +1,6 @@
-/**
- * File import service with Web Worker delegation for large files.
- */
-
-import GeoJSON from 'ol/format/GeoJSON.js';
-import KML from 'ol/format/KML.js';
-import type { Feature } from 'ol';
-import type { Geometry } from 'ol/geom';
-import { GisService } from './spatial.service';
+import { transformImportedData } from '@geovara/core';
 import { PARSE_WORKER_THRESHOLD } from '$lib/config/constants';
 import type { WorkerParseResult } from '$lib/types/geojson.types';
-
-const kmlFormat = new KML({
-	extractStyles: true,
-	showPointNames: true
-});
 
 /**
  * Determines if the GeoJSON string is large enough to warrant worker parsing.
@@ -61,21 +48,8 @@ export async function importFile(content: string, filename: string): Promise<str
 	const isTopo = lower.endsWith('.topojson');
 	const canTryWorker = !isKml && !isTopo && shouldParseInWorker(content.length);
 
-	if (isKml) {
-		const kmlFeatures = kmlFormat.readFeatures(content, {
-			featureProjection: 'EPSG:3857'
-		});
-		const gjFormat = new GeoJSON({
-			featureProjection: 'EPSG:3857',
-			dataProjection: 'EPSG:4326'
-		});
-		return gjFormat.writeFeatures(kmlFeatures as Feature<Geometry>[]);
-	}
-
-	if (isTopo) {
-		const topology: unknown = JSON.parse(content);
-		const fc = GisService.fromTopoJSON(topology);
-		return JSON.stringify(fc, null, 2);
+	if (isKml || isTopo) {
+		return transformImportedData(content, filename);
 	}
 
 	if (canTryWorker) {

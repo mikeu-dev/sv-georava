@@ -16,7 +16,17 @@
   "peerDependencies": {
     "ol": "^10.9.0"
   },
+  "dependencies": {
+    "@turf/turf": "^7.3.5",
+    "jszip": "^3.10.1",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1"
+  },
   "devDependencies": {
+    "@types/geojson": "^7946.0.16",
+    "@types/topojson-client": "^3.1.5",
+    "@types/topojson-server": "^3.0.4",
+    "@types/topojson-specification": "^1.0.5",
     "ol": "^10.9.0",
     "tsup": "^8.3.5",
     "typescript": "^6.0.2"

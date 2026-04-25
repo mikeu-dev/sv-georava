@@ -194,7 +194,32 @@ importers:
         version: 2.1.1(svelte@5.55.5(@typescript-eslint/types@8.59.0))(vitest@4.1.5)
 
   packages/core:
+    dependencies:
+      '@turf/turf':
+        specifier: ^7.3.5
+        version: 7.3.5
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
+      topojson-client:
+        specifier: ^3.1.0
+        version: 3.1.0
+      topojson-server:
+        specifier: ^3.0.1
+        version: 3.0.1
     devDependencies:
+      '@types/geojson':
+        specifier: ^7946.0.16
+        version: 7946.0.16
+      '@types/topojson-client':
+        specifier: ^3.1.5
+        version: 3.1.5
+      '@types/topojson-server':
+        specifier: ^3.0.4
+        version: 3.0.4
+      '@types/topojson-specification':
+        specifier: ^1.0.5
+        version: 1.0.5
       ol:
         specifier: ^10.9.0
         version: 10.9.0

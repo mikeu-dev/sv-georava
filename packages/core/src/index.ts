@@ -2,3 +2,8 @@ export * from './map/map.js';
 export * from './layer/layer.js';
 export * from './events/events.js';
 export * from './interaction/interaction.js';
+export * from './spatial/spatial.js';
+export * from './format/topojson.js';
+export * from './export/export.js';
+export * from './import/import.js';
+export * from './types.js';
