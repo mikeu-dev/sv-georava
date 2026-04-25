@@ -19,50 +19,52 @@
 	}
 </script>
 
-<div class="z-10 flex flex-col gap-2 pointer-events-auto">
+<div class="pointer-events-auto z-10 flex flex-col gap-2">
 	<BitsDropdown.Root>
 		<BitsDropdown.Trigger class="outline-none">
 			<Button
 				variant="secondary"
 				size="icon"
-				class="h-10 w-10 rounded-full border border-border/50 bg-background/80 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-background"
+				class="border-border/50 bg-background/80 hover:bg-background h-10 w-10 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
 			>
-				<Layers class="h-5 w-5 text-primary" />
+				<Layers class="text-primary h-5 w-5" />
 			</Button>
 		</BitsDropdown.Trigger>
 
 		<BitsDropdown.Content
 			side="left"
 			align="start"
-			class="z-50 w-56 rounded-xl border bg-popover p-2 shadow-xl backdrop-blur-xl animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+			class="bg-popover animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-56 rounded-xl border p-2 shadow-xl backdrop-blur-xl"
 			sideOffset={8}
 		>
-			<div class="px-2 py-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+			<div
+				class="text-muted-foreground px-2 py-1.5 text-[10px] font-medium tracking-wider uppercase"
+			>
 				Basemap
 			</div>
-			
+
 			{#each BASEMAPS as basemap (basemap.id)}
 				<BitsDropdown.Item
-					class="flex w-full cursor-pointer items-center rounded-lg px-2 py-2 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent"
+					class="hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center rounded-lg px-2 py-2 text-sm transition-colors outline-none"
 					onclick={() => handleBasemapChange(basemap.id)}
 				>
 					<div class="mr-2 flex h-4 w-4 shrink-0 items-center justify-center">
 						{#if activeBasemap === basemap.id}
-							<Check class="h-3.5 w-3.5 text-accent-foreground" />
+							<Check class="text-accent-foreground h-3.5 w-3.5" />
 						{/if}
 					</div>
-					<span class="flex-1 text-foreground">{basemap.name}</span>
+					<span class="text-foreground flex-1">{basemap.name}</span>
 				</BitsDropdown.Item>
 			{/each}
 
-			<div class="my-1 h-px bg-border"></div>
+			<div class="bg-border my-1 h-px"></div>
 
 			<div class="px-2 py-2">
 				<div class="mb-1.5 flex items-center justify-between">
-					<span class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+					<span class="text-muted-foreground text-[10px] font-medium tracking-wider uppercase">
 						Opacity
 					</span>
-					<span class="font-mono text-[10px] text-muted-foreground">
+					<span class="text-muted-foreground font-mono text-[10px]">
 						{Math.round(opacity * 100)}%
 					</span>
 				</div>
@@ -73,7 +75,7 @@
 					step="0.05"
 					value={opacity}
 					oninput={handleOpacityChange}
-					class="accent-accent h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted"
+					class="accent-accent bg-muted h-1.5 w-full cursor-pointer appearance-none rounded-full"
 					onclick={(e) => e.stopPropagation()}
 				/>
 			</div>

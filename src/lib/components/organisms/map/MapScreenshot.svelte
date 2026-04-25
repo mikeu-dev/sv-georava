@@ -20,7 +20,9 @@
 			if (!mapContext) return;
 
 			// Composite all canvas layers
-			const canvases = map.getViewport().querySelectorAll('.ol-layer canvas, canvas.ol-unselectable');
+			const canvases = map
+				.getViewport()
+				.querySelectorAll('.ol-layer canvas, canvas.ol-unselectable');
 			canvases.forEach((canvas: Element) => {
 				const htmlCanvas = canvas as HTMLCanvasElement;
 				if (htmlCanvas.width > 0) {
@@ -34,7 +36,14 @@
 						.map(Number);
 
 					if (matrix) {
-						mapContext.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+						mapContext.setTransform(
+							matrix[0],
+							matrix[1],
+							matrix[2],
+							matrix[3],
+							matrix[4],
+							matrix[5]
+						);
 					} else {
 						mapContext.setTransform(1, 0, 0, 1, 0, 0);
 					}
@@ -69,9 +78,9 @@
 	<Button
 		variant="secondary"
 		size="icon"
-		class="h-10 w-10 rounded-full border border-border/50 bg-background/80 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-background"
+		class="border-border/50 bg-background/80 hover:bg-background h-10 w-10 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
 		onclick={handleScreenshot}
 	>
-		<Camera class="h-4 w-4 text-primary" />
+		<Camera class="text-primary h-4 w-4" />
 	</Button>
 </Tooltip>

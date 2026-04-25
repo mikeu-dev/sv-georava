@@ -130,27 +130,69 @@ function createMapStore() {
 	}
 
 	return {
-		get features() { return features; },
-		get selectedFeature() { return selectedFeature; },
-		get drawType() { return drawType; },
-		get projection() { return projection; },
-		get vectorOpacity() { return vectorOpacity; },
-		set vectorOpacity(v: number) { vectorOpacity = v; },
-		get vectorVisible() { return vectorVisible; },
-		set vectorVisible(v: boolean) { vectorVisible = v; },
-		get basemapOpacity() { return basemapOpacity; },
-		set basemapOpacity(v: number) { basemapOpacity = v; },
-		get isParsing() { return isParsing; },
-		set isParsing(v: boolean) { isParsing = v; },
-		get zoomToId() { return zoomToId; },
-		get is3d() { return is3d; },
-		set is3d(v: boolean) { is3d = v; },
-		get activeBasemap() { return activeBasemap; },
-		set activeBasemap(v: BasemapId) { activeBasemap = v; },
-		get featuresCount() { return featuresCount; },
-		get geojsonString() { return geojsonString; },
-		get skipFeaturesSync() { return skipFeaturesSync; },
-		set skipFeaturesSync(v: boolean) { skipFeaturesSync = v; },
+		get features() {
+			return features;
+		},
+		get selectedFeature() {
+			return selectedFeature;
+		},
+		get drawType() {
+			return drawType;
+		},
+		get projection() {
+			return projection;
+		},
+		get vectorOpacity() {
+			return vectorOpacity;
+		},
+		set vectorOpacity(v: number) {
+			vectorOpacity = v;
+		},
+		get vectorVisible() {
+			return vectorVisible;
+		},
+		set vectorVisible(v: boolean) {
+			vectorVisible = v;
+		},
+		get basemapOpacity() {
+			return basemapOpacity;
+		},
+		set basemapOpacity(v: number) {
+			basemapOpacity = v;
+		},
+		get isParsing() {
+			return isParsing;
+		},
+		set isParsing(v: boolean) {
+			isParsing = v;
+		},
+		get zoomToId() {
+			return zoomToId;
+		},
+		get is3d() {
+			return is3d;
+		},
+		set is3d(v: boolean) {
+			is3d = v;
+		},
+		get activeBasemap() {
+			return activeBasemap;
+		},
+		set activeBasemap(v: BasemapId) {
+			activeBasemap = v;
+		},
+		get featuresCount() {
+			return featuresCount;
+		},
+		get geojsonString() {
+			return geojsonString;
+		},
+		get skipFeaturesSync() {
+			return skipFeaturesSync;
+		},
+		set skipFeaturesSync(v: boolean) {
+			skipFeaturesSync = v;
+		},
 
 		setFeatures,
 		addFeature,

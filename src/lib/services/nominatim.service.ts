@@ -17,9 +17,7 @@ function getNominatimFetchInit(extra?: HeadersInit): RequestInit {
 	return { headers };
 }
 
-export function nominatimSearchUrl(
-	params: Record<string, string | number | undefined>
-): string {
+export function nominatimSearchUrl(params: Record<string, string | number | undefined>): string {
 	const q = new URLSearchParams();
 	for (const [k, v] of Object.entries(params)) {
 		if (v !== undefined) q.set(k, String(v));

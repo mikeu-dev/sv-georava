@@ -101,7 +101,9 @@
 			if (!geometry) return null;
 
 			const type = geometry.getType();
-			const geojson = geojsonFormat.writeFeatureObject(feature) as unknown as GeoJSONFeature<GeoJSONGeometry>;
+			const geojson = geojsonFormat.writeFeatureObject(
+				feature
+			) as unknown as GeoJSONFeature<GeoJSONGeometry>;
 
 			if (type === 'Polygon' || type === 'MultiPolygon') {
 				const area = GisService.calculateArea(geojson);
@@ -127,9 +129,9 @@
 	}
 </script>
 
-<BitsPopover.Root open={true} onOpenChange={onOpenChange}>
+<BitsPopover.Root open={true} {onOpenChange}>
 	<BitsPopover.Content
-		class="z-50 w-80 rounded-xl border bg-background/95 p-4 shadow-2xl backdrop-blur-md animate-in fade-in-0 zoom-in-95 pointer-events-auto"
+		class="bg-background/95 animate-in fade-in-0 zoom-in-95 pointer-events-auto z-50 w-80 rounded-xl border p-4 shadow-2xl backdrop-blur-md"
 		style="transform: translate({position.x}px, {position.y}px)"
 		onInteractOutside={(e) => {
 			if (isDragging) e.preventDefault();
@@ -139,7 +141,7 @@
 			<div
 				role="button"
 				tabindex="0"
-				class="flex cursor-move items-center justify-center py-1 text-muted-foreground transition-colors hover:text-foreground outline-none"
+				class="text-muted-foreground hover:text-foreground flex cursor-move items-center justify-center py-1 transition-colors outline-none"
 				onmousedown={handleDragStart}
 				onkeydown={(e) => {
 					if (e.key === 'Enter' || e.key === ' ') {
@@ -151,11 +153,11 @@
 			</div>
 
 			<div class="space-y-1 text-center">
-				<h4 class="text-sm font-semibold leading-none">Feature Properties</h4>
-				<p class="text-xs text-muted-foreground">Manage attributes for this feature</p>
+				<h4 class="text-sm leading-none font-semibold">Feature Properties</h4>
+				<p class="text-muted-foreground text-xs">Manage attributes for this feature</p>
 			</div>
 
-			<div class="grid max-h-64 gap-2 overflow-y-auto pr-1 scrollbar-thin">
+			<div class="scrollbar-thin grid max-h-64 gap-2 overflow-y-auto pr-1">
 				{#each properties as [key, value] (key)}
 					<div class="group flex items-center gap-2">
 						<div class="flex flex-1 flex-col gap-1">
@@ -168,23 +170,32 @@
 								}}
 							/>
 							{#if isColorProperty(key)}
-								<div class="relative flex h-7 items-center overflow-hidden rounded-md border border-input">
+								<div
+									class="border-input relative flex h-7 items-center overflow-hidden rounded-md border"
+								>
 									<input
 										type="color"
 										value={String(value || '#000000')}
-										oninput={(e) => handlePropertyValueChange(key, (e.target as HTMLInputElement).value)}
+										oninput={(e) =>
+											handlePropertyValueChange(key, (e.target as HTMLInputElement).value)}
 										class="absolute inset-0 h-full w-full cursor-pointer border-none p-0 opacity-0"
 									/>
-									<div class="flex w-full items-center px-2 text-[10px] font-mono">
-										<div class="mr-2 h-3 w-3 rounded-full border border-border" style="background-color: {String(value || '#000000')}"></div>
+									<div class="flex w-full items-center px-2 font-mono text-[10px]">
+										<div
+											class="border-border mr-2 h-3 w-3 rounded-full border"
+											style="background-color: {String(value || '#000000')}"
+										></div>
 										{String(value || '#000000')}
 									</div>
 								</div>
 							{:else}
 								<Input
-									value={typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value ?? '')}
+									value={typeof value === 'object' && value !== null
+										? JSON.stringify(value)
+										: String(value ?? '')}
 									class="h-7 text-xs"
-									onblur={(e) => handlePropertyValueChange(key, (e.target as HTMLInputElement).value)}
+									onblur={(e) =>
+										handlePropertyValueChange(key, (e.target as HTMLInputElement).value)}
 								/>
 							{/if}
 						</div>
@@ -194,7 +205,7 @@
 							class="h-7 w-7 shrink-0 transition-opacity"
 							onclick={() => handleRemoveProperty(key)}
 						>
-							<Trash2 class="h-3.5 w-3.5 text-destructive" />
+							<Trash2 class="text-destructive h-3.5 w-3.5" />
 						</Button>
 					</div>
 				{/each}
@@ -205,8 +216,8 @@
 			</Button>
 
 			{#if calculatedAnalysis}
-				<div class="rounded-lg bg-muted/50 p-2 text-[10px] border border-border/50">
-					<span class="font-semibold text-muted-foreground">{calculatedAnalysis.label}:</span>
+				<div class="bg-muted/50 border-border/50 rounded-lg border p-2 text-[10px]">
+					<span class="text-muted-foreground font-semibold">{calculatedAnalysis.label}:</span>
 					<span class="ml-1 font-mono">{calculatedAnalysis.value}</span>
 				</div>
 			{/if}

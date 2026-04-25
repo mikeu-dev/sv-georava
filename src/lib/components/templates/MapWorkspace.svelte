@@ -5,7 +5,7 @@
 	import DrawingToolbar from '../organisms/map/DrawingToolbar.svelte';
 	import { uiStore } from '$lib/stores/ui.store.svelte';
 	import { onMount } from 'svelte';
-	
+
 	let { user } = $props<{ user: { name: string; email: string; image?: string | null } | null }>();
 
 	onMount(() => {
@@ -13,38 +13,40 @@
 	});
 </script>
 
-<div class="flex h-screen w-full overflow-hidden bg-background selection:bg-primary/20">
+<div class="bg-background selection:bg-primary/20 flex h-screen w-full overflow-hidden">
 	<!-- Sidebar Area -->
 	<Sidebar>
 		{#if uiStore.activeTab === 'json'}
 			<JsonEditorPanel />
 		{:else if uiStore.activeTab === 'features'}
-			<div class="p-8 text-center text-muted-foreground animate-fade-in">
-				<p class="text-xs font-bold uppercase tracking-widest">Features List</p>
+			<div class="text-muted-foreground animate-fade-in p-8 text-center">
+				<p class="text-xs font-bold tracking-widest uppercase">Features List</p>
 				<p class="mt-2 text-[10px]">Work in progress...</p>
 			</div>
 		{:else if uiStore.activeTab === 'layers'}
-			<div class="p-8 text-center text-muted-foreground animate-fade-in">
-				<p class="text-xs font-bold uppercase tracking-widest">Layers Manager</p>
+			<div class="text-muted-foreground animate-fade-in p-8 text-center">
+				<p class="text-xs font-bold tracking-widest uppercase">Layers Manager</p>
 				<p class="mt-2 text-[10px]">Work in progress...</p>
 			</div>
 		{:else if uiStore.activeTab === 'help'}
-			<div class="p-8 text-center text-muted-foreground animate-fade-in">
-				<p class="text-xs font-bold uppercase tracking-widest">Documentation</p>
+			<div class="text-muted-foreground animate-fade-in p-8 text-center">
+				<p class="text-xs font-bold tracking-widest uppercase">Documentation</p>
 				<p class="mt-2 text-[10px]">Work in progress...</p>
 			</div>
 		{/if}
 	</Sidebar>
 
 	<!-- Map Area -->
-	<main class="relative flex-1 h-full overflow-hidden">
+	<main class="relative h-full flex-1 overflow-hidden">
 		<MapCanvas {user}>
 			<DrawingToolbar />
 		</MapCanvas>
 
 		<!-- Notifications / Overlays -->
 		{#if uiStore.isCopied}
-			<div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-full text-xs font-bold shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+			<div
+				class="bg-primary text-primary-foreground animate-in slide-in-from-bottom-4 fixed bottom-20 left-1/2 z-50 -translate-x-1/2 rounded-full px-4 py-2 text-xs font-bold shadow-2xl duration-300"
+			>
 				GeoJSON Copied to Clipboard
 			</div>
 		{/if}

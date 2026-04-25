@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Sparkles, Loader2, Command, X } from 'lucide-svelte';
+	import { Sparkles, Loader2, X } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 
@@ -47,7 +47,7 @@
 					narrative = '';
 				}
 			}, 3000);
-		} catch (err) {
+		} catch {
 			narrative = 'Error communicating with AI.';
 		} finally {
 			isLoading = false;
@@ -70,40 +70,50 @@
 {#if !isOpen}
 	<button
 		onclick={toggle}
-		class="fixed bottom-20 right-6 z-30 flex items-center gap-2.5 px-4 py-2.5 rounded-full glass-pill shadow-2xl hover:scale-105 transition-all border border-white/10 bg-accent/15 group"
+		class="glass-pill bg-accent/15 group fixed right-6 bottom-20 z-30 flex items-center gap-2.5 rounded-full border border-white/10 px-4 py-2.5 shadow-2xl transition-all hover:scale-105"
 	>
-		<Sparkles class="h-5 w-5 text-accent animate-pulse" />
-		<span class="text-xs font-bold text-foreground/90">Ask Georava</span>
-		<div class="flex items-center gap-1 ml-1 px-1.5 py-0.5 rounded-md bg-white/10 border border-white/10">
-			<span class="text-[9px] font-mono font-bold text-muted-foreground uppercase">Ctrl+K</span>
+		<Sparkles class="text-accent h-5 w-5 animate-pulse" />
+		<span class="text-foreground/90 text-xs font-bold">Ask Georava</span>
+		<div
+			class="ml-1 flex items-center gap-1 rounded-md border border-white/10 bg-white/10 px-1.5 py-0.5"
+		>
+			<span class="text-muted-foreground font-mono text-[9px] font-bold uppercase">Ctrl+K</span>
 		</div>
 	</button>
 {:else}
-	<div class="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4 bg-background/40 backdrop-blur-md animate-in fade-in duration-300">
-		<div class="w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl border border-border bg-card/80 backdrop-blur-2xl animate-in slide-in-from-top-8">
-			<form onsubmit={handleSubmit} class="flex items-center p-5 gap-4">
+	<div
+		class="bg-background/40 animate-in fade-in fixed inset-0 z-50 flex items-start justify-center px-4 pt-[15vh] backdrop-blur-md duration-300"
+	>
+		<div
+			class="border-border bg-card/80 animate-in slide-in-from-top-8 w-full max-w-2xl overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-2xl"
+		>
+			<form onsubmit={handleSubmit} class="flex items-center gap-4 p-5">
 				{#if isLoading}
-					<Loader2 class="h-6 w-6 animate-spin text-accent" />
+					<Loader2 class="text-accent h-6 w-6 animate-spin" />
 				{:else}
-					<Sparkles class="h-6 w-6 text-accent" />
+					<Sparkles class="text-accent h-6 w-6" />
 				{/if}
 				<input
 					bind:this={inputRef}
 					bind:value={query}
 					type="text"
-					class="flex-1 bg-transparent border-none outline-none text-lg font-medium placeholder:text-muted-foreground/50"
+					class="placeholder:text-muted-foreground/50 flex-1 border-none bg-transparent text-lg font-medium outline-none"
 					placeholder="Ask Georava (e.g., 'Fly to Jakarta' or 'Buffer these polylines')..."
 					disabled={isLoading}
 				/>
-				<button type="button" onclick={() => (isOpen = false)} class="p-1.5 hover:bg-muted rounded-lg transition-all">
-					<X class="h-5 w-5 text-muted-foreground" />
+				<button
+					type="button"
+					onclick={() => (isOpen = false)}
+					class="hover:bg-muted rounded-lg p-1.5 transition-all"
+				>
+					<X class="text-muted-foreground h-5 w-5" />
 				</button>
 			</form>
 
 			{#if narrative}
-				<div class="px-5 pb-5 animate-in fade-in slide-in-from-top-2">
-					<div class="pt-4 border-t border-border/50 flex items-start gap-3">
-						<p class="text-sm text-foreground/80 italic">{narrative}</p>
+				<div class="animate-in fade-in slide-in-from-top-2 px-5 pb-5">
+					<div class="border-border/50 flex items-start gap-3 border-t pt-4">
+						<p class="text-foreground/80 text-sm italic">{narrative}</p>
 					</div>
 				</div>
 			{/if}

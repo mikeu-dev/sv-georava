@@ -94,14 +94,14 @@
 	}
 </script>
 
-<div bind:this={containerElement} class="absolute left-12 top-3 z-40 w-72 pointer-events-auto">
+<div bind:this={containerElement} class="pointer-events-auto absolute top-3 left-12 z-40 w-72">
 	<div
 		class={cn(
-			'flex items-center gap-2 rounded-lg bg-background/80 px-3 py-2 backdrop-blur-md transition-all duration-200 border border-border/50',
-			isFocused ? 'ring-2 ring-accent/40 shadow-lg' : 'shadow-sm'
+			'bg-background/80 border-border/50 flex items-center gap-2 rounded-lg border px-3 py-2 backdrop-blur-md transition-all duration-200',
+			isFocused ? 'ring-accent/40 shadow-lg ring-2' : 'shadow-sm'
 		)}
 	>
-		<Search class="h-4 w-4 shrink-0 text-muted-foreground" />
+		<Search class="text-muted-foreground h-4 w-4 shrink-0" />
 		<input
 			type="text"
 			placeholder="Search location..."
@@ -115,14 +115,14 @@
 					(e.target as HTMLInputElement).blur();
 				}
 			}}
-			class="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+			class="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent text-sm outline-none"
 		/>
 		{#if isLoading}
-			<Loader2 class="h-3.5 w-3.5 animate-spin text-muted-foreground" />
+			<Loader2 class="text-muted-foreground h-3.5 w-3.5 animate-spin" />
 		{:else if query}
 			<button
 				onclick={handleClear}
-				class="text-muted-foreground transition-colors hover:text-foreground"
+				class="text-muted-foreground hover:text-foreground transition-colors"
 			>
 				<X class="h-3.5 w-3.5" />
 			</button>
@@ -131,15 +131,15 @@
 
 	{#if isOpen && results.length > 0}
 		<div
-			class="mt-1.5 overflow-hidden rounded-lg border border-border/50 bg-background/90 shadow-xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2"
+			class="border-border/50 bg-background/90 animate-in fade-in slide-in-from-top-2 mt-1.5 overflow-hidden rounded-lg border shadow-xl backdrop-blur-xl"
 		>
 			{#each results as result (result.place_id)}
 				<button
 					onclick={() => handleSelect(result)}
-					class="flex w-full items-start gap-2.5 border-b border-border/30 px-3 py-2.5 text-left transition-colors hover:bg-accent/10 last:border-0"
+					class="border-border/30 hover:bg-accent/10 flex w-full items-start gap-2.5 border-b px-3 py-2.5 text-left transition-colors last:border-0"
 				>
-					<MapPin class="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
-					<span class="line-clamp-2 text-xs leading-tight text-foreground">
+					<MapPin class="text-accent mt-0.5 h-3.5 w-3.5 shrink-0" />
+					<span class="text-foreground line-clamp-2 text-xs leading-tight">
 						{result.display_name}
 					</span>
 				</button>

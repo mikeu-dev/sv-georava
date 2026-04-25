@@ -62,7 +62,7 @@
 		role="button"
 		tabindex="0"
 		class={cn(baseClass, variants[variant], sizes[size], className)}
-		onclick={onclick}
+		{onclick}
 		{...rest}
 	>
 		{@render children?.()}
@@ -72,7 +72,7 @@
 		role="button"
 		tabindex="0"
 		class={cn(baseClass, variants[variant], sizes[size], className)}
-		onclick={onclick}
+		{onclick}
 		{...rest}
 	>
 		{@render children?.()}

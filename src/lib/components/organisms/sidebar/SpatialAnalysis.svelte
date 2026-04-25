@@ -24,18 +24,20 @@
 		try {
 			// Convert OL feature to GeoJSON
 			const geojson = geojsonFormat.writeFeatureObject(selectedFeature);
-			
+
 			// Apply Turf Buffer
-			const buffered = turf.buffer(geojson as GeoJSONFeature, bufferDistance, { units: bufferUnit });
-			
+			const buffered = turf.buffer(geojson as GeoJSONFeature, bufferDistance, {
+				units: bufferUnit
+			});
+
 			// Convert back to OL feature
 			const newFeatures = geojsonFormat.readFeatures(buffered);
-			
+
 			if (newFeatures.length > 0) {
 				const feature = newFeatures[0] as Feature<Geometry>;
 				feature.setId(`buffer_${Date.now()}`);
 				feature.set('name', `Buffer ${bufferDistance}${bufferUnit === 'meters' ? 'm' : 'km'}`);
-				
+
 				mapStore.addFeature(feature);
 				uiStore.setValidation('success', 'Buffer created successfully');
 			}
@@ -45,28 +47,30 @@
 	}
 </script>
 
-<div class="flex h-full flex-col bg-background">
+<div class="bg-background flex h-full flex-col">
 	<div class="border-b px-4 py-2">
-		<h3 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+		<h3
+			class="text-muted-foreground flex items-center gap-2 text-xs font-semibold tracking-wider uppercase"
+		>
 			<Wand2 class="h-3.5 w-3.5" />
 			Spatial Analysis
 		</h3>
 	</div>
 
-	<div class="p-4 space-y-6">
+	<div class="space-y-6 p-4">
 		<!-- Selected Feature Info -->
-		<div class="rounded-lg border bg-muted/20 p-3">
+		<div class="bg-muted/20 rounded-lg border p-3">
 			<div class="mb-2 flex items-center gap-2 text-xs font-medium">
-				<Info class="h-3.5 w-3.5 text-primary" />
+				<Info class="text-primary h-3.5 w-3.5" />
 				Selected Feature
 			</div>
 			{#if mapStore.selectedFeature}
-				<p class="text-[10px] text-muted-foreground">
-					ID: {mapStore.selectedFeature.getId()}<br/>
+				<p class="text-muted-foreground text-[10px]">
+					ID: {mapStore.selectedFeature.getId()}<br />
 					Type: {mapStore.selectedFeature.getGeometry()?.getType()}
 				</p>
 			{:else}
-				<p class="text-[10px] text-destructive italic">No feature selected</p>
+				<p class="text-destructive text-[10px] italic">No feature selected</p>
 			{/if}
 		</div>
 
@@ -74,24 +78,24 @@
 		<div class="space-y-3">
 			<label for="distance" class="text-xs font-medium">Buffer Distance</label>
 			<div class="flex gap-2">
-				<input 
+				<input
 					id="distance"
-					type="number" 
+					type="number"
 					bind:value={bufferDistance}
-					class="w-full rounded-md border bg-background px-3 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary"
+					class="bg-background focus:ring-primary w-full rounded-md border px-3 py-1.5 text-xs outline-none focus:ring-1"
 				/>
-				<select 
+				<select
 					bind:value={bufferUnit}
-					class="rounded-md border bg-background px-2 py-1.5 text-xs outline-none"
+					class="bg-background rounded-md border px-2 py-1.5 text-xs outline-none"
 				>
 					<option value="meters">Meters</option>
 					<option value="kilometers">Kilometers</option>
 				</select>
 			</div>
-			
-			<Button 
-				variant="accent" 
-				class="w-full gap-2" 
+
+			<Button
+				variant="accent"
+				class="w-full gap-2"
 				onclick={applyBuffer}
 				disabled={!mapStore.selectedFeature}
 			>
@@ -100,8 +104,11 @@
 			</Button>
 		</div>
 
-		<div class="rounded-md bg-accent/10 p-3 text-[10px] text-muted-foreground">
-			<p>💡 Select a feature on the map, set the distance, and click Generate to create a surrounding buffer zone.</p>
+		<div class="bg-accent/10 text-muted-foreground rounded-md p-3 text-[10px]">
+			<p>
+				💡 Select a feature on the map, set the distance, and click Generate to create a surrounding
+				buffer zone.
+			</p>
 		</div>
 	</div>
 </div>

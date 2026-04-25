@@ -36,9 +36,9 @@
 	import SceneViewSwitcher from './SceneViewSwitcher.svelte';
 	import UserMenu from '../auth/UserMenu.svelte';
 
-	let { children, user } = $props<{ 
-		children?: import('svelte').Snippet, 
-		user: { name: string; email: string; image?: string | null } | null 
+	let { children, user } = $props<{
+		children?: import('svelte').Snippet;
+		user: { name: string; email: string; image?: string | null } | null;
 	}>();
 
 	let mapElement = $state<HTMLElement>();
@@ -90,7 +90,10 @@
 
 		// Interaction: DragAndDrop
 		const dragAndDrop = new DragAndDrop({
-			formatConstructors: [GeoJSON as unknown as typeof GeoJSON, topoJsonDragFormat as unknown as typeof GeoJSON]
+			formatConstructors: [
+				GeoJSON as unknown as typeof GeoJSON,
+				topoJsonDragFormat as unknown as typeof GeoJSON
+			]
 		});
 		map.addInteraction(dragAndDrop);
 		dragAndDrop.on('addfeatures', (e: DragAndDropEvent) => {
@@ -181,7 +184,9 @@
 		if (!basemapLayer) return;
 		const def = BASEMAPS.find((b) => b.id === mapStore.activeBasemap);
 		if (def) {
-			const source = def.isXYZ ? new XYZ({ url: def.url, attributions: def.attributions, maxZoom: def.maxZoom }) : new OSM();
+			const source = def.isXYZ
+				? new XYZ({ url: def.url, attributions: def.attributions, maxZoom: def.maxZoom })
+				: new OSM();
 			basemapLayer.setSource(source);
 		}
 	});
@@ -221,27 +226,30 @@
 </script>
 
 <div class="relative h-full w-full overflow-hidden">
-	<div bind:this={mapElement} class="h-full w-full outline-none bg-muted/20"></div>
-	
+	<div bind:this={mapElement} class="bg-muted/20 h-full w-full outline-none"></div>
+
 	<!-- Map Overlay Components -->
-	<div class="absolute inset-0 pointer-events-none z-20">
+	<div class="pointer-events-none absolute inset-0 z-20">
 		<LocationSearch {map} />
-		
-		<div class="absolute top-3 right-3 flex flex-col gap-3 items-end">
+
+		<div class="absolute top-3 right-3 flex flex-col items-end gap-3">
 			<UserMenu {user} />
 			<Compass {map} />
 			<SceneViewSwitcher />
 			{@render children?.()}
 		</div>
 
-		<div class="absolute bottom-12 right-3 flex flex-col gap-2 items-end">
+		<div class="absolute right-3 bottom-12 flex flex-col items-end gap-2">
 			<BasemapSwitcher />
 			<MapScreenshot {map} />
 		</div>
 
-		<MeasurementController {map} activeType={mapStore.drawType as 'MeasureDistance' | 'MeasureArea' | null} />
+		<MeasurementController
+			{map}
+			activeType={mapStore.drawType as 'MeasureDistance' | 'MeasureArea' | null}
+		/>
 		<CesiumController {map} enabled={mapStore.is3d} />
-		
+
 		<StatusBar {map} projection={mapStore.projection} />
 
 		{#if isPopupOpen && mapStore.selectedFeature}

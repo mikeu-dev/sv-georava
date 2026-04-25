@@ -59,7 +59,7 @@
 				side="left"
 			/>
 			{#if tool.type === 'Text' || tool.type === 'MeasureArea'}
-				<div class="my-0.5 h-px w-full bg-border/40"></div>
+				<div class="bg-border/40 my-0.5 h-px w-full"></div>
 			{/if}
 		{/each}
 	</div>

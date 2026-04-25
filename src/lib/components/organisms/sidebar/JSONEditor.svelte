@@ -45,7 +45,7 @@
 		try {
 			const parsed = JSON.parse(content);
 			const features = geojsonFormat.readFeatures(parsed);
-			
+
 			// Update store with features from editor
 			mapStore.skipFeaturesSync = true;
 			mapStore.setFeatures(features as Feature<Geometry>[]);
@@ -75,15 +75,15 @@
 	});
 </script>
 
-<div class="flex h-full flex-col overflow-hidden bg-background">
+<div class="bg-background flex h-full flex-col overflow-hidden">
 	<div bind:this={editorElement} class="flex-1 overflow-hidden text-sm"></div>
-	
+
 	{#if uiStore.validationFeedback}
-		<div 
+		<div
 			class={cn(
-				"border-t px-4 py-2 text-xs font-mono transition-colors",
-				uiStore.validationStatus === 'error' && "bg-destructive/10 text-destructive",
-				uiStore.validationStatus === 'success' && "bg-success/10 text-success"
+				'border-t px-4 py-2 font-mono text-xs transition-colors',
+				uiStore.validationStatus === 'error' && 'bg-destructive/10 text-destructive',
+				uiStore.validationStatus === 'success' && 'bg-success/10 text-success'
 			)}
 		>
 			{uiStore.validationFeedback}

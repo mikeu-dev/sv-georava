@@ -19,9 +19,7 @@ export const GisService = {
 		return turf.buffer(feature, radius, { units });
 	},
 
-	calculateCentroid(
-		data: Feature<Geometry> | FeatureCollection<Geometry>
-	): Feature<Point> {
+	calculateCentroid(data: Feature<Geometry> | FeatureCollection<Geometry>): Feature<Point> {
 		return turf.centroid(data);
 	},
 

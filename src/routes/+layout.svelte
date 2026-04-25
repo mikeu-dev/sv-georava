@@ -7,4 +7,3 @@
 <Tooltip.Provider>
 	{@render children()}
 </Tooltip.Provider>
-

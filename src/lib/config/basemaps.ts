@@ -14,7 +14,8 @@ export const BASEMAPS: BasemapDefinition[] = [
 		name: 'Satellite (Esri)',
 		url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 		maxZoom: 19,
-		attributions: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community',
+		attributions:
+			'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community',
 		isXYZ: true
 	},
 	{
@@ -22,7 +23,8 @@ export const BASEMAPS: BasemapDefinition[] = [
 		name: 'Topographic',
 		url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
 		maxZoom: 17,
-		attributions: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)',
+		attributions:
+			'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)',
 		isXYZ: true
 	},
 	{

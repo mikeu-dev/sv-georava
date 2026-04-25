@@ -13,11 +13,7 @@ self.onmessage = (event: MessageEvent<string>) => {
 	try {
 		const parsed: unknown = JSON.parse(geojsonString);
 
-		if (
-			!parsed ||
-			typeof parsed !== 'object' ||
-			!('type' in (parsed as Record<string, unknown>))
-		) {
+		if (!parsed || typeof parsed !== 'object' || !('type' in (parsed as Record<string, unknown>))) {
 			throw new Error('Invalid GeoJSON structure');
 		}
 

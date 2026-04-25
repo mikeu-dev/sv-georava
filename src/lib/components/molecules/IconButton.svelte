@@ -32,15 +32,7 @@
 </script>
 
 <Tooltip content={label} {side}>
-	<Button 
-		tag="span"
-		{variant} 
-		{size} 
-		{onclick} 
-		{disabled} 
-		class={className} 
-		data-active={active}
-	>
+	<Button tag="span" {variant} {size} {onclick} {disabled} class={className} data-active={active}>
 		<IconComp class={iconClass ?? 'h-4 w-4'} />
 	</Button>
 </Tooltip>

@@ -25,75 +25,79 @@
 	});
 </script>
 
-<div class="z-10 flex flex-col gap-2 pointer-events-auto">
+<div class="pointer-events-auto z-10 flex flex-col gap-2">
 	<Tooltip content="Map View & Projection" side="left">
 		<BitsDropdown.Root>
 			<BitsDropdown.Trigger class="outline-none">
 				<Button
 					variant="secondary"
 					size="icon"
-					class="flex h-10 w-10 flex-col items-center justify-center gap-0.5 rounded-full border border-border/50 bg-background/80 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-background"
+					class="border-border/50 bg-background/80 hover:bg-background flex h-10 w-10 flex-col items-center justify-center gap-0.5 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
 				>
 					{#if is3d}
-						<Globe class="h-4 w-4 text-primary" />
+						<Globe class="text-primary h-4 w-4" />
 					{:else}
-						<MapIcon class="h-4 w-4 text-primary" />
+						<MapIcon class="text-primary h-4 w-4" />
 					{/if}
-					<span class="text-[8px] font-bold leading-none opacity-70">{activeLabel}</span>
+					<span class="text-[8px] leading-none font-bold opacity-70">{activeLabel}</span>
 				</Button>
 			</BitsDropdown.Trigger>
 
 			<BitsDropdown.Content
 				side="left"
 				align="start"
-				class="z-50 w-56 rounded-xl border bg-popover p-2 shadow-xl backdrop-blur-xl animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+				class="bg-popover animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-56 rounded-xl border p-2 shadow-xl backdrop-blur-xl"
 				sideOffset={8}
 			>
-				<div class="px-2 py-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+				<div
+					class="text-muted-foreground px-2 py-1.5 text-[10px] font-medium tracking-wider uppercase"
+				>
 					2D Flat Mode
 				</div>
 
 				<BitsDropdown.Item
-					class="flex w-full cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent"
+					class="hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-sm transition-colors outline-none"
 					onclick={() => handleSelectMode('3857')}
 				>
 					<div class="flex items-center gap-2">
-						<MapIcon class="h-3.5 w-3.5 text-muted-foreground" />
+						<MapIcon class="text-muted-foreground h-3.5 w-3.5" />
 						<span>Web Mercator (3857)</span>
 					</div>
 					{#if !is3d && projection === 'EPSG:3857'}
-						<Check class="h-3.5 w-3.5 text-accent-foreground" />
+						<Check class="text-accent-foreground h-3.5 w-3.5" />
 					{/if}
 				</BitsDropdown.Item>
 
 				<BitsDropdown.Item
-					class="flex w-full cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent"
+					class="hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-sm transition-colors outline-none"
 					onclick={() => handleSelectMode('4326')}
 				>
 					<div class="flex items-center gap-2">
-						<MapIcon class="h-3.5 w-3.5 text-muted-foreground" />
+						<MapIcon class="text-muted-foreground h-3.5 w-3.5" />
 						<span>WGS 84 (4326)</span>
 					</div>
 					{#if !is3d && projection === 'EPSG:4326'}
-						<Check class="h-3.5 w-3.5 text-accent-foreground" />
+						<Check class="text-accent-foreground h-3.5 w-3.5" />
 					{/if}
 				</BitsDropdown.Item>
 
-				<div class="my-1 h-px bg-border"></div>
-				<div class="px-2 py-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+				<div class="bg-border my-1 h-px"></div>
+				<div
+					class="text-muted-foreground px-2 py-1.5 text-[10px] font-medium tracking-wider uppercase"
+				>
 					3D Globe Mode
 				</div>
 
 				<BitsDropdown.Item
-					class="flex w-full cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-sm outline-none transition-colors hover:bg-accent focus:bg-accent"
+					class="hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center justify-between rounded-lg px-2 py-2 text-sm transition-colors outline-none"
 					onclick={() => handleSelectMode('3d')}
 				>
-					<div class="flex items-center gap-2 text-cyan-600 font-medium">
+					<div class="flex items-center gap-2 font-medium text-cyan-600">
 						<Globe class="h-3.5 w-3.5" />
 						<span>Cesium 3D Globe</span>
 					</div>
 					{#if is3d}
-						<Check class="h-3.5 w-3.5 text-accent-foreground" />
+						<Check class="text-accent-foreground h-3.5 w-3.5" />
 					{/if}
 				</BitsDropdown.Item>
 			</BitsDropdown.Content>

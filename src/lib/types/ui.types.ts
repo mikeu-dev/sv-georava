@@ -4,7 +4,7 @@
 
 export type Theme = 'light' | 'dark';
 
-export type SidebarTab = 'json' | 'features' | 'layers' | 'spatial' | 'help';
+export type SidebarTab = 'json' | 'features' | 'layers' | 'projects' | 'spatial' | 'help';
 
 export type ValidationStatus = 'idle' | 'loading' | 'success' | 'error';
 

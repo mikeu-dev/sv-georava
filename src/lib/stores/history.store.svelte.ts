@@ -56,9 +56,15 @@ function createHistoryStore<T>(initialState: T) {
 	}
 
 	return {
-		get state() { return current; },
-		get canUndo() { return canUndo; },
-		get canRedo() { return canRedo; },
+		get state() {
+			return current;
+		},
+		get canUndo() {
+			return canUndo;
+		},
+		get canRedo() {
+			return canRedo;
+		},
 		set,
 		undo,
 		redo,
