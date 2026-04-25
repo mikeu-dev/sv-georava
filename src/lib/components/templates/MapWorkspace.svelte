@@ -5,6 +5,8 @@
 	import DrawingToolbar from '../organisms/map/DrawingToolbar.svelte';
 	import { uiStore } from '$lib/stores/ui.store.svelte';
 	import { onMount } from 'svelte';
+	
+	let { user } = $props<{ user: { name: string; email: string; image?: string | null } | null }>();
 
 	onMount(() => {
 		uiStore.initTheme();
@@ -36,7 +38,7 @@
 
 	<!-- Map Area -->
 	<main class="relative flex-1 h-full overflow-hidden">
-		<MapCanvas>
+		<MapCanvas {user}>
 			<DrawingToolbar />
 		</MapCanvas>
 

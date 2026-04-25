@@ -34,8 +34,12 @@
 	import CesiumController from './CesiumController.svelte';
 	import StatusBar from './StatusBar.svelte';
 	import SceneViewSwitcher from './SceneViewSwitcher.svelte';
+	import UserMenu from '../auth/UserMenu.svelte';
 
-	let { children } = $props();
+	let { children, user } = $props<{ 
+		children?: import('svelte').Snippet, 
+		user: { name: string; email: string; image?: string | null } | null 
+	}>();
 
 	let mapElement = $state<HTMLElement>();
 	let map = $state<Map>();
@@ -224,6 +228,7 @@
 		<LocationSearch {map} />
 		
 		<div class="absolute top-3 right-3 flex flex-col gap-3 items-end">
+			<UserMenu {user} />
 			<Compass {map} />
 			<SceneViewSwitcher />
 			{@render children?.()}
