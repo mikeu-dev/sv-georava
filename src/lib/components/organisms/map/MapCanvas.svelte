@@ -43,6 +43,13 @@ import * as sphere from 'ol/sphere.js';
 	import LineString from 'ol/geom/LineString.js';
 	import Polygon from 'ol/geom/Polygon.js';
 	import Circle from 'ol/geom/Circle.js';
+	import MultiPoint from 'ol/geom/MultiPoint.js';
+	import MultiLineString from 'ol/geom/MultiLineString.js';
+	import MultiPolygon from 'ol/geom/MultiPolygon.js';
+	import GeometryCollection from 'ol/geom/GeometryCollection.js';
+	import VectorTileLayer from 'ol/layer/VectorTile.js';
+	import VectorTileSource from 'ol/source/VectorTile.js';
+	import Source from 'ol/source/Source.js';
 
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
@@ -95,14 +102,24 @@ import * as sphere from 'ol/sphere.js';
 			Collection,
 			Object: BaseObject,
 			events,
-			layer: { Tile: TileLayer, Vector: VectorLayer, Group: LayerGroup, Layer, Image: ImageLayer },
+			layer: {
+				Tile: TileLayer,
+				Vector: VectorLayer,
+				Group: LayerGroup,
+				Layer,
+				Image: ImageLayer,
+				VectorTile: VectorTileLayer,
+				Base: Layer
+			},
 			source: {
 				Vector: VectorSource,
 				OSM,
 				XYZ,
 				Tile: TileSource,
 				Image: ImageSource,
-				ImageCanvas: ImageCanvasSource
+				ImageCanvas: ImageCanvasSource,
+				VectorTile: VectorTileSource,
+				Source: Source
 			},
 			format: { GeoJSON, MVT, WKT },
 			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle },
@@ -111,7 +128,16 @@ import * as sphere from 'ol/sphere.js';
 			extent,
 			sphere,
 			proj,
-			geom: { Point, LineString, Polygon, Circle },
+			geom: {
+				Point,
+				LineString,
+				Polygon,
+				Circle,
+				MultiPoint,
+				MultiLineString,
+				MultiPolygon,
+				GeometryCollection
+			},
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
 		};
 
