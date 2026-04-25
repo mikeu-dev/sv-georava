@@ -8,7 +8,7 @@
 	import { getFromHash, decodeGeoJSON, encodeGeoJSON, updateUrlHash, markRouterAsInitialized } from '$lib/services/url-state.service';
 	import type { BasemapId } from '$lib/types/map.types';
 
-	let { user } = $props<{ user: { name: string; email: string; image?: string | null } | null }>();
+
 
 	onMount(() => {
 		markRouterAsInitialized();
@@ -98,7 +98,7 @@
 
 	<!-- Map Area -->
 	<main class="relative h-full flex-1 overflow-hidden">
-		<MapCanvas {user} />
+		<MapCanvas />
 
 		<!-- Notifications / Overlays -->
 		{#if uiStore.isCopied}

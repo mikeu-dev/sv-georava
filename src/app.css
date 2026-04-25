@@ -186,7 +186,6 @@ body {
 	z-index: 40;
 }
 
-.ol-user-menu { top: 0.75rem; right: 0.75rem; }
 .ol-scene-view-switcher { top: 3.5rem; right: 0.75rem; }
 .ol-drawing-tools { top: 6.25rem; right: 0.75rem; }
 .ol-basemap-switcher { bottom: 3.5rem; right: 0.75rem; }

@@ -68,15 +68,13 @@ import * as sphere from 'ol/sphere.js';
 	import CesiumController from './CesiumController.svelte';
 	import StatusBar from './StatusBar.svelte';
 	import SceneViewSwitcher from './SceneViewSwitcher.svelte';
-	import UserMenu from '../auth/UserMenu.svelte';
 	import DrawingToolbar from './DrawingToolbar.svelte';
 	import HomeButton from './HomeButton.svelte';
 	import ZoomExtent from './ZoomExtent.svelte';
 	import GeolocationTool from './GeolocationTool.svelte';
 
-	let { children, user } = $props<{
+	let { children } = $props<{
 		children?: import('svelte').Snippet;
-		user: { name: string; email: string; image?: string | null } | null;
 	}>();
 
 	let mapElement = $state<HTMLElement>();
@@ -407,7 +405,6 @@ import * as sphere from 'ol/sphere.js';
 
 	<!-- Map Overlay Components (Internal Controls) -->
 	<LocationSearch {map} />
-	<UserMenu {user} {map} />
 
 	<div class="ol-control-stack-left">
 		<Compass {map} standalone={false} />
