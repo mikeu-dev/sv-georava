@@ -7,6 +7,7 @@
 	}
 
 	interface CesiumGlobal {
+		EllipsoidTerrainProvider: new () => unknown;
 		createWorldTerrainAsync: () => Promise<unknown>;
 		Cesium3DTileset: {
 			fromUrl: (url: string, options: unknown) => Promise<unknown>;
@@ -84,18 +85,9 @@
 				ol3d = ol3dInstance;
 
 				const scene = ol3dInstance.getCesiumScene();
-
-				const terrainProvider = await Cesium.createWorldTerrainAsync();
-				scene.terrainProvider = terrainProvider;
-
-				const tileset = await Cesium.Cesium3DTileset.fromUrl(
-					'https://assets.cesium.com/1/ion/default/v1/354307/tileset.json?assetId=354307',
-					{
-						skipLevelOfDetail: true,
-						cullWithChildrenBounds: false
-					}
-				);
-				scene.primitives.add(tileset);
+				
+				// Use open source Ellipsoid terrain instead of Cesium Ion
+				scene.terrainProvider = new Cesium.EllipsoidTerrainProvider();
 
 				isInitialized = true;
 				ol3d.setEnabled(enabled);
