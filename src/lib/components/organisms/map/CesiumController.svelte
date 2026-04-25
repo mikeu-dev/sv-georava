@@ -72,7 +72,7 @@
 						await new Promise((r) => setTimeout(r, 100));
 						attempts++;
 					}
-					await loadScript('https://cdn.jsdelivr.net/npm/ol-cesium@2.23.0/dist/olcesium.js');
+					await loadScript('https://cdn.jsdelivr.net/npm/ol-cesium@2.17.0/dist/olcesium.js');
 				}
 
 				const Cesium = win.Cesium;

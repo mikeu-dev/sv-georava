@@ -20,7 +20,7 @@
 	import Overlay from 'ol/Overlay.js';
 	import BaseObject from 'ol/Object.js';
 	import * as proj from 'ol/proj.js';
-	import { Style, Fill, Stroke, Icon, Circle as CircleStyle } from 'ol/style.js';
+	import { Style, Fill, Stroke, Icon, Circle as CircleStyle, Text, RegularShape, Image as ImageStyle } from 'ol/style.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
 	import { createBox } from 'ol/interaction/Draw.js';
@@ -34,7 +34,7 @@ import * as events from 'ol/events.js';
 import RenderFeature from 'ol/render/Feature.js';
 import * as extent from 'ol/extent.js';
 import * as sphere from 'ol/sphere.js';
-	import type { Geometry } from 'ol/geom';
+
 	import type { SelectEvent } from 'ol/interaction/Select';
 	import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop';
 	import type { DrawEvent } from 'ol/interaction/Draw';
@@ -46,11 +46,12 @@ import * as sphere from 'ol/sphere.js';
 	import MultiPoint from 'ol/geom/MultiPoint.js';
 	import MultiLineString from 'ol/geom/MultiLineString.js';
 	import MultiPolygon from 'ol/geom/MultiPolygon.js';
+	import BaseGeometry from 'ol/geom/Geometry.js';
 	import GeometryCollection from 'ol/geom/GeometryCollection.js';
 	import VectorTileLayer from 'ol/layer/VectorTile.js';
+	import BaseLayer from 'ol/layer/Base.js';
 	import VectorTileSource from 'ol/source/VectorTile.js';
 	import Source from 'ol/source/Source.js';
-
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
 	import { BASEMAPS } from '$lib/config/basemaps';
@@ -79,8 +80,8 @@ import * as sphere from 'ol/sphere.js';
 
 	let mapElement = $state<HTMLElement>();
 	let map = $state<Map>();
-	let vectorSource = $state<VectorSource<Feature<Geometry>>>();
-	let vectorLayer = $state<VectorLayer<VectorSource<Feature<Geometry>>>>();
+	let vectorSource = $state<VectorSource<Feature<BaseGeometry>>>();
+	let vectorLayer = $state<VectorLayer<VectorSource<Feature<BaseGeometry>>>>();
 	let basemapLayer = $state<TileLayer<OSM | XYZ>>();
 
 	let isPopupOpen = $state(false);
@@ -109,7 +110,7 @@ import * as sphere from 'ol/sphere.js';
 				Layer,
 				Image: ImageLayer,
 				VectorTile: VectorTileLayer,
-				Base: Layer
+				Base: BaseLayer
 			},
 			source: {
 				Vector: VectorSource,
@@ -122,7 +123,7 @@ import * as sphere from 'ol/sphere.js';
 				Source: Source
 			},
 			format: { GeoJSON, MVT, WKT },
-			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle },
+			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle, Text, RegularShape, Image: ImageStyle },
 			structs: { LRUCache },
 			render: { Feature: RenderFeature },
 			extent,
@@ -136,6 +137,7 @@ import * as sphere from 'ol/sphere.js';
 				MultiPoint,
 				MultiLineString,
 				MultiPolygon,
+				Geometry: BaseGeometry,
 				GeometryCollection
 			},
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
@@ -173,7 +175,7 @@ import * as sphere from 'ol/sphere.js';
 		map.addInteraction(select);
 		select.on('select', (e: SelectEvent) => {
 			const selected = e.selected[0] || null;
-			mapStore.selectFeature(selected as Feature<Geometry> | null);
+			mapStore.selectFeature(selected as Feature<BaseGeometry> | null);
 		});
 
 		// Interaction: DragAndDrop
@@ -186,7 +188,7 @@ import * as sphere from 'ol/sphere.js';
 		map.addInteraction(dragAndDrop);
 		dragAndDrop.on('addfeatures', (e: DragAndDropEvent) => {
 			if (e.features) {
-				vectorSource?.addFeatures(e.features as Feature<Geometry>[]);
+				vectorSource?.addFeatures(e.features as Feature<BaseGeometry>[]);
 				syncStoreFromMap();
 			}
 		});
@@ -207,7 +209,7 @@ import * as sphere from 'ol/sphere.js';
 
 		// Sync store initial state
 		if (mapStore.features.length > 0) {
-			vectorSource.addFeatures(mapStore.features as Feature<Geometry>[]);
+			vectorSource.addFeatures(mapStore.features as Feature<BaseGeometry>[]);
 		}
 
 		// Initial View State from URL
@@ -261,7 +263,7 @@ import * as sphere from 'ol/sphere.js';
 			return;
 		}
 		vectorSource.clear();
-		vectorSource.addFeatures(mapStore.features as Feature<Geometry>[]);
+		vectorSource.addFeatures(mapStore.features as Feature<BaseGeometry>[]);
 	});
 
 	// Effect: Handle Drawing Tools
@@ -345,7 +347,7 @@ import * as sphere from 'ol/sphere.js';
 					padding: [50, 50, 50, 50],
 					maxZoom: 18
 				});
-				mapStore.selectFeature(feature as Feature<Geometry>);
+				mapStore.selectFeature(feature as Feature<BaseGeometry>);
 			}
 		}
 	});
@@ -363,7 +365,7 @@ import * as sphere from 'ol/sphere.js';
 		if (!vectorSource) return;
 		const features = vectorSource.getFeatures();
 		mapStore.skipFeaturesSync = true;
-		mapStore.setFeatures(features as Feature<Geometry>[]);
+		mapStore.setFeatures(features as Feature<BaseGeometry>[]);
 	}
 </script>
 
