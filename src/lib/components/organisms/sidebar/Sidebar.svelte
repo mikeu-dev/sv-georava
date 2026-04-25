@@ -64,10 +64,12 @@
 	data-collapsed={uiStore.sidebarCollapsed}
 >
 	<!-- Header -->
-	<header class="flex h-14 items-center justify-between border-b px-4">
-		<div class="flex items-center gap-2 font-semibold">
-			<LayoutDashboard class="text-primary h-5 w-5" />
-			<span>Georava Workspace</span>
+	<header class="bg-muted/5 flex h-14 items-center justify-between border-b px-4">
+		<div class="flex items-center gap-2 font-bold tracking-tight">
+			<div class="bg-primary/20 flex h-7 w-7 items-center justify-center rounded-lg shadow-inner">
+				<LayoutDashboard class="text-primary h-4.5 w-4.5" />
+			</div>
+			<span class="text-sm">Georava Workspace</span>
 		</div>
 		<div class="flex items-center gap-1">
 			<IconButton icon={Settings2 as unknown as LucideIcon} label="Settings" />
@@ -94,9 +96,9 @@
 			<button
 				onclick={() => uiStore.setActiveTab(tab.id)}
 				class={cn(
-					'flex-1 rounded-md px-2 py-1.5 text-[10px] font-medium whitespace-nowrap transition-colors',
+					'flex-1 rounded-md px-2 py-2 text-[11px] font-bold whitespace-nowrap transition-all duration-200',
 					uiStore.activeTab === tab.id
-						? 'bg-background text-foreground shadow-sm'
+						? 'bg-background text-primary shadow-[0_2px_10px_-3px_rgba(0,0,0,0.1)]'
 						: 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
 				)}
 			>
@@ -134,16 +136,15 @@
 	<footer class="flex flex-col border-t">
 		<div class="bg-muted/5 flex items-center justify-between p-2 px-3">
 			{#if $session.data}
-				<div class="flex items-center gap-2 overflow-hidden">
+				<div class="flex items-center gap-2.5 overflow-hidden">
 					<div
-						class="bg-primary/10 text-primary flex h-7 w-7 items-center justify-center rounded-full"
+						class="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full border border-primary/20 shadow-inner"
 					>
-						<UserIcon class="h-4 w-4" />
+						<UserIcon class="h-4.5 w-4.5" />
 					</div>
 					<div class="flex flex-col overflow-hidden">
-						<span class="truncate text-[10px] font-semibold">{$session.data.user.name}</span>
-						<span class="text-muted-foreground truncate text-[9px]">{$session.data.user.email}</span
-						>
+						<span class="truncate text-[11px] font-bold leading-tight">{$session.data.user.name}</span>
+						<span class="text-muted-foreground truncate text-[10px]">{$session.data.user.email}</span>
 					</div>
 				</div>
 				<IconButton

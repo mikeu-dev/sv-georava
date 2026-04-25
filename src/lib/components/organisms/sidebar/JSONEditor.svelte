@@ -9,6 +9,12 @@
 	import GeoJSON from 'ol/format/GeoJSON.js';
 	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
+	import { Braces } from 'lucide-svelte';
+	import type { Icon } from 'lucide-svelte';
+	import type { Component, ComponentProps } from 'svelte';
+	import IconButton from '../../molecules/IconButton.svelte';
+
+	type LucideIcon = Component<ComponentProps<Icon>>;
 
 	let editorElement = $state<HTMLElement>();
 	let view = $state<EditorView>();
@@ -55,6 +61,20 @@
 		}
 	}
 
+	function formatJson() {
+		if (!view) return;
+		try {
+			const current = view.state.doc.toString();
+			const formatted = JSON.stringify(JSON.parse(current), null, 2);
+			view.dispatch({
+				changes: { from: 0, to: view.state.doc.length, insert: formatted }
+			});
+			uiStore.setValidation('success', 'Formatted successfully');
+		} catch {
+			uiStore.setValidation('error', 'Cannot format invalid JSON');
+		}
+	}
+
 	// Sync editor when map features change
 	$effect(() => {
 		const geojson = mapStore.featuresToGeoJSON();
@@ -81,12 +101,22 @@
 	{#if uiStore.validationFeedback}
 		<div
 			class={cn(
-				'border-t px-4 py-2 font-mono text-xs transition-colors',
+				'flex items-center justify-between border-t px-4 py-2 font-mono text-[10px] transition-all duration-300',
 				uiStore.validationStatus === 'error' && 'bg-destructive/10 text-destructive',
 				uiStore.validationStatus === 'success' && 'bg-success/10 text-success'
 			)}
 		>
-			{uiStore.validationFeedback}
+			<span class="truncate">{uiStore.validationFeedback}</span>
+			<div class="flex gap-1">
+				<IconButton
+					icon={Braces as unknown as LucideIcon}
+					label="Format JSON"
+					size="xs"
+					variant="ghost"
+					class="h-5 w-5 p-0"
+					onclick={formatJson}
+				/>
+			</div>
 		</div>
 	{/if}
 </div>

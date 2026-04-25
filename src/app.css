@@ -26,6 +26,8 @@
 	--color-accent-foreground: hsl(0 0% 100%);
 	--color-destructive: hsl(0 72% 51%);
 	--color-destructive-foreground: hsl(0 0% 98%);
+	--color-success: hsl(142 71% 45%);
+	--color-success-foreground: hsl(0 0% 100%);
 	--color-border: hsl(220 13% 90%);
 	--color-input: hsl(220 13% 90%);
 	--color-ring: hsl(173 58% 39%);
@@ -49,6 +51,8 @@
 	--color-accent-foreground: hsl(0 0% 100%);
 	--color-destructive: hsl(0 63% 31%);
 	--color-destructive-foreground: hsl(210 40% 98%);
+	--color-success: hsl(142 71% 35%);
+	--color-success-foreground: hsl(0 0% 100%);
 	--color-border: hsl(217 33% 18%);
 	--color-input: hsl(217 33% 18%);
 	--color-ring: hsl(173 58% 45%);
@@ -356,4 +360,35 @@ body {
 
 .animate-slide-in-top {
 	animation: slideInFromTop 0.5s ease-out forwards;
+}
+/* ─── Loading Overlay ─── */
+.loading-overlay {
+	background: color-mix(in srgb, var(--color-background) 40%, transparent);
+	backdrop-filter: blur(8px) saturate(120%);
+	z-index: 100;
+}
+
+.loading-spinner {
+	border-top-color: var(--color-primary);
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animate-pulse-subtle {
+	animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-subtle {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
 }

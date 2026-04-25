@@ -4,6 +4,7 @@
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { BASEMAPS } from '$lib/config/basemaps';
 	import Button from '$lib/components/atoms/Button.svelte';
+	import { cn } from '$lib/utils/cn';
 
 	let activeBasemap = $derived(mapStore.activeBasemap);
 	let opacity = $state(mapStore.basemapOpacity);
@@ -48,12 +49,25 @@
 					class="hover:bg-accent focus:bg-accent flex w-full cursor-pointer items-center rounded-lg px-2 py-2 text-sm transition-colors outline-none"
 					onclick={() => handleBasemapChange(basemap.id)}
 				>
-					<div class="mr-2 flex h-4 w-4 shrink-0 items-center justify-center">
+					<div
+						class={cn(
+							'mr-3 h-8 w-12 shrink-0 rounded-md border shadow-sm transition-transform group-hover:scale-105',
+							basemap.id === 'osm' && 'bg-blue-400/20',
+							basemap.id === 'satellite' && 'bg-emerald-900/40',
+							basemap.id === 'dark' && 'bg-slate-900',
+							basemap.id === 'topo' && 'bg-orange-200/30'
+						)}
+					>
 						{#if activeBasemap === basemap.id}
-							<Check class="text-accent-foreground h-3.5 w-3.5" />
+							<div class="bg-primary/90 flex h-full w-full items-center justify-center rounded-[inherit]">
+								<Check class="h-4 w-4 text-white" />
+							</div>
 						{/if}
 					</div>
-					<span class="text-foreground flex-1">{basemap.name}</span>
+					<div class="flex flex-col">
+						<span class="text-foreground text-[11px] font-bold leading-none">{basemap.name}</span>
+						<span class="text-muted-foreground mt-1 text-[9px]">Standard tiles</span>
+					</div>
 				</BitsDropdown.Item>
 			{/each}
 

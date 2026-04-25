@@ -49,6 +49,7 @@
 	let basemapLayer = $state<TileLayer<OSM | XYZ>>();
 
 	let isPopupOpen = $state(false);
+	let isLoading = $state(true);
 
 	// Initialize Map
 	onMount(() => {
@@ -157,6 +158,10 @@
 		};
 		window.addEventListener('hashchange', handleHashChange);
 
+		setTimeout(() => {
+			isLoading = false;
+		}, 800);
+
 		return () => {
 			window.removeEventListener('hashchange', handleHashChange);
 			map?.setTarget(undefined);
@@ -263,6 +268,18 @@
 
 <div class="relative h-full w-full overflow-hidden">
 	<div bind:this={mapElement} class="bg-muted/20 h-full w-full outline-none"></div>
+
+	{#if isLoading}
+		<div
+			class="loading-overlay absolute inset-0 flex flex-col items-center justify-center gap-4 transition-opacity duration-500"
+		>
+			<div class="loading-spinner h-10 w-10 rounded-full border-4 border-muted/30"></div>
+			<div class="animate-pulse-subtle flex flex-col items-center gap-1">
+				<span class="text-xs font-bold tracking-widest uppercase opacity-70">Georava</span>
+				<span class="text-muted-foreground text-[10px]">Initializing Engine...</span>
+			</div>
+		</div>
+	{/if}
 
 	<!-- Map Overlay Components -->
 	<div class="pointer-events-none absolute inset-0 z-20">
