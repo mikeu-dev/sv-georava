@@ -63,8 +63,8 @@
 	}
 </script>
 
-<div bind:this={element} class="ol-drawing-tools drawing-tools ol-unselectable ol-control">
-	<div class="drawing-controls flex flex-col gap-1">
+<div bind:this={element} class="ol-drawing-tools ol-unselectable ol-control">
+	<div class="ol-panel flex flex-col gap-0.5">
 		{#each tools as tool (tool.type || 'select')}
 			<IconButton
 				icon={tool.icon}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Sidebar from '../organisms/sidebar/Sidebar.svelte';
-	import JsonEditorPanel from '../organisms/sidebar/JsonEditorPanel.svelte';
 	import MapCanvas from '../organisms/map/MapCanvas.svelte';
 	import { uiStore } from '$lib/stores/ui.store.svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
@@ -71,41 +70,26 @@
 			'3d': mapStore.is3d ? 'true' : null
 		});
 	});
+	import ActivityBar from '../organisms/sidebar/ActivityBar.svelte';
 </script>
 
 <div class="bg-background selection:bg-primary/20 flex h-screen w-full overflow-hidden">
-	<!-- Sidebar Area -->
-	<Sidebar>
-		{#if uiStore.activeTab === 'json'}
-			<JsonEditorPanel />
-		{:else if uiStore.activeTab === 'features'}
-			<div class="text-muted-foreground animate-fade-in p-8 text-center">
-				<p class="text-xs font-bold tracking-widest uppercase">Features List</p>
-				<p class="mt-2 text-[10px]">Work in progress...</p>
-			</div>
-		{:else if uiStore.activeTab === 'layers'}
-			<div class="text-muted-foreground animate-fade-in p-8 text-center">
-				<p class="text-xs font-bold tracking-widest uppercase">Layers Manager</p>
-				<p class="mt-2 text-[10px]">Work in progress...</p>
-			</div>
-		{:else if uiStore.activeTab === 'help'}
-			<div class="text-muted-foreground animate-fade-in p-8 text-center">
-				<p class="text-xs font-bold tracking-widest uppercase">Documentation</p>
-				<p class="mt-2 text-[10px]">Work in progress...</p>
-			</div>
-		{/if}
-	</Sidebar>
+	<!-- Activity Bar (Navigation) -->
+	<ActivityBar />
 
-	<!-- Map Area -->
+	<!-- Inspector Sidebar (Contextual) -->
+	<Sidebar />
+
+	<!-- Map Area (Canvas) -->
 	<main class="relative h-full flex-1 overflow-hidden">
 		<MapCanvas />
 
 		<!-- Notifications / Overlays -->
 		{#if uiStore.isCopied}
 			<div
-				class="bg-primary text-primary-foreground animate-in slide-in-from-bottom-4 fixed bottom-20 left-1/2 z-50 -translate-x-1/2 rounded-full px-4 py-2 text-xs font-bold shadow-2xl duration-300"
+				class="bg-primary text-primary-foreground animate-in slide-in-from-bottom-4 fixed bottom-20 left-1/2 z-50 -translate-x-1/2 rounded-full px-4 py-2 text-[10px] font-bold shadow-2xl duration-300 tracking-wider uppercase"
 			>
-				GeoJSON Copied to Clipboard
+				GeoJSON Copied
 			</div>
 		{/if}
 	</main>
