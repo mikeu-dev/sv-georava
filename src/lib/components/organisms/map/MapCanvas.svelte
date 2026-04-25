@@ -92,6 +92,16 @@ import * as sphere from 'ol/sphere.js';
 		if (!mapElement) return;
 
 		// Expose ol globally for ol-cesium CDN compatibility
+		const DummyClass = class {};
+		const createProxy = (obj: Record<string, unknown>) => new Proxy(obj, {
+			get: (target, prop) => {
+				if (typeof prop === 'string') {
+					return prop in target ? target[prop] : DummyClass;
+				}
+				return Reflect.get(target, prop);
+			}
+		});
+
 		// @ts-expect-error - ol is not defined on window
 		window.ol = {
 			Map,
@@ -103,7 +113,7 @@ import * as sphere from 'ol/sphere.js';
 			Collection,
 			Object: BaseObject,
 			events,
-			layer: {
+			layer: createProxy({
 				Tile: TileLayer,
 				Vector: VectorLayer,
 				Group: LayerGroup,
@@ -111,8 +121,8 @@ import * as sphere from 'ol/sphere.js';
 				Image: ImageLayer,
 				VectorTile: VectorTileLayer,
 				Base: BaseLayer
-			},
-			source: {
+			}),
+			source: createProxy({
 				Vector: VectorSource,
 				OSM,
 				XYZ,
@@ -121,15 +131,15 @@ import * as sphere from 'ol/sphere.js';
 				ImageCanvas: ImageCanvasSource,
 				VectorTile: VectorTileSource,
 				Source: Source
-			},
-			format: { GeoJSON, MVT, WKT },
-			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle, Text, RegularShape, Image: ImageStyle },
-			structs: { LRUCache },
-			render: { Feature: RenderFeature },
+			}),
+			format: createProxy({ GeoJSON, MVT, WKT }),
+			style: createProxy({ Style, Fill, Stroke, Icon, Circle: CircleStyle, Text, RegularShape, Image: ImageStyle }),
+			structs: createProxy({ LRUCache }),
+			render: createProxy({ Feature: RenderFeature }),
 			extent,
 			sphere,
 			proj,
-			geom: {
+			geom: createProxy({
 				Point,
 				LineString,
 				Polygon,
@@ -139,8 +149,8 @@ import * as sphere from 'ol/sphere.js';
 				MultiPolygon,
 				Geometry: BaseGeometry,
 				GeometryCollection
-			},
-			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
+			}),
+			interaction: createProxy({ Draw, Modify, Select, DragAndDrop, createBox })
 		};
 
 		vectorSource = new VectorSource({ wrapX: false });
