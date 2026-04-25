@@ -18,7 +18,7 @@
 	const { form, errors, enhance, constraints } = superForm(
 		untrack(() => data.form),
 		{
-			validators: zodClient(loginSchema as unknown as Parameters<typeof zodClient>[0]),
+			validators: zodClient(loginSchema),
 			SPA: true,
 			async onUpdate({ form: f }) {
 				if (!f.valid) return;

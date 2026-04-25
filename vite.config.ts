@@ -10,6 +10,11 @@ export default defineConfig({
 		sveltekit(),
 		paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' })
 	],
+	resolve: {
+		alias: {
+			'zod/v3': 'zod'
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

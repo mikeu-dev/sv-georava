@@ -8,6 +8,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.session) {
 		throw redirect(303, '/');
 	}
-	const form = await superValidate(zod(registerSchema as unknown as Parameters<typeof zod>[0]));
+	const form = await superValidate(zod(registerSchema));
 	return { form };
 };
