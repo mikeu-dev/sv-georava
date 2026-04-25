@@ -21,6 +21,9 @@
 	import GeoJSON from 'ol/format/GeoJSON.js';
 import MVT from 'ol/format/MVT.js';
 import WKT from 'ol/format/WKT.js';
+import LRUCache from 'ol/structs/LRUCache.js';
+import Observable from 'ol/Observable.js';
+import * as events from 'ol/events.js';
 	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
 	import type { SelectEvent } from 'ol/interaction/Select';
@@ -77,6 +80,8 @@ import WKT from 'ol/format/WKT.js';
 			Map,
 			View,
 			Tile,
+			Observable,
+			events,
 			layer: { Tile: TileLayer, Vector: VectorLayer },
 			source: {
 				Vector: VectorSource,
@@ -88,6 +93,7 @@ import WKT from 'ol/format/WKT.js';
 			},
 			format: { GeoJSON, MVT, WKT },
 			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle },
+			structs: { LRUCache },
 			proj: { fromLonLat, toLonLat },
 			geom: { Point, LineString, Polygon, Circle },
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }

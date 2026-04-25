@@ -15,7 +15,10 @@
 
 	interface CesiumWin extends Window {
 		Cesium?: CesiumGlobal;
-		ol?: unknown;
+		ol?: {
+			style?: unknown;
+			structs?: unknown;
+		};
 		olcs?: {
 			OLCesium: new (options: { map: Map }) => {
 				getCesiumScene: () => {
@@ -64,7 +67,7 @@
 				if (!win.olcs) {
 					// Wait for MapCanvas to define window.ol
 					let attempts = 0;
-					while (!win.ol && attempts < 50) {
+					while ((!win.ol || !win.ol.style || !win.ol.structs) && attempts < 50) {
 						await new Promise((r) => setTimeout(r, 100));
 						attempts++;
 					}

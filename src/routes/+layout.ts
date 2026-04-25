@@ -7,3 +7,4 @@ export const load: LayoutLoad = async ({ data }) => {
 };
 
 export const trailingSlash = 'always';
+export const ssr = false;
