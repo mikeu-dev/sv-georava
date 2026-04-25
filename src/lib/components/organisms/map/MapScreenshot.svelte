@@ -93,7 +93,7 @@
 		<Button
 			variant="secondary"
 			size="icon"
-			class="border-border/50 bg-background/80 hover:bg-background h-10 w-10 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
+			class="premium-control h-9 w-9"
 			onclick={handleScreenshot}
 		>
 			<Camera class="text-primary h-4 w-4" />

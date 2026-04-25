@@ -41,17 +41,17 @@
 </script>
 
 <div bind:this={element} class="ol-compass ol-unselectable ol-control">
-	<Tooltip content="Reset North (Rotate with Alt+Shift+Drag)" side="left">
+	<Tooltip content="Reset North (Rotate with Alt+Shift+Drag)" side="right">
 		<Button
 			variant="secondary"
 			size="icon"
-			class="group border-border/50 bg-background/80 hover:bg-background relative h-10 w-10 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
+			class="premium-control group relative h-9 w-9 rounded-full transition-all duration-300"
 			onclick={handleResetRotation}
 			style="transform: rotate({rotation}rad)"
 		>
 			<CompassIcon class="text-primary h-5 w-5 transition-transform group-hover:scale-110" />
 			<div
-				class="bg-destructive absolute -top-1 left-1/2 h-2 w-1 -translate-x-1/2 rounded-full"
+				class="bg-destructive absolute -top-1 left-1/2 h-2.5 w-1 -translate-x-1/2 rounded-full border border-white"
 			></div>
 		</Button>
 	</Tooltip>
@@ -59,7 +59,7 @@
 
 <style>
 	.ol-compass {
-		top: 4.5rem;
-		right: 0.75rem;
+		top: 3.5rem;
+		left: 0.75rem;
 	}
 </style>

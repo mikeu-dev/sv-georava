@@ -39,7 +39,7 @@
 				<Button
 					variant="ghost"
 					size="icon"
-					class="border-border/50 bg-background/50 h-9 w-9 overflow-hidden rounded-full border backdrop-blur-sm"
+					class="premium-control h-9 w-9 overflow-hidden rounded-full"
 				>
 					{#if user.image}
 						<img src={user.image} alt={user.name} class="h-full w-full object-cover" />

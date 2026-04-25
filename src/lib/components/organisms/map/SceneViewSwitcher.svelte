@@ -48,7 +48,7 @@
 				<Button
 					variant="secondary"
 					size="icon"
-					class="border-border/50 bg-background/80 hover:bg-background flex h-10 w-10 flex-col items-center justify-center gap-0.5 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300"
+					class="premium-control flex h-9 w-9 flex-col items-center justify-center gap-0.5"
 				>
 					{#if is3d}
 						<Globe class="text-primary h-4 w-4" />

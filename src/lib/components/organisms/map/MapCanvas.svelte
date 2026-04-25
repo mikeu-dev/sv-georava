@@ -36,6 +36,10 @@
 	import StatusBar from './StatusBar.svelte';
 	import SceneViewSwitcher from './SceneViewSwitcher.svelte';
 	import UserMenu from '../auth/UserMenu.svelte';
+	import DrawingToolbar from './DrawingToolbar.svelte';
+	import HomeButton from './HomeButton.svelte';
+	import ZoomExtent from './ZoomExtent.svelte';
+	import GeolocationTool from './GeolocationTool.svelte';
 
 	let { children, user } = $props<{
 		children?: import('svelte').Snippet;
@@ -281,39 +285,35 @@
 		</div>
 	{/if}
 
-	<!-- Map Overlay Components -->
-	<div class="pointer-events-none absolute inset-0 z-20">
-		<LocationSearch {map} />
+	<!-- Map Overlay Components (Internal Controls) -->
+	<LocationSearch {map} />
+	<UserMenu {user} {map} />
+	<Compass {map} />
+	<HomeButton {map} />
+	<ZoomExtent {map} />
+	<GeolocationTool {map} />
 
-		<div class="absolute top-3 right-3 flex flex-col items-end gap-3">
-			<UserMenu {user} />
-			<Compass {map} />
-			<SceneViewSwitcher />
-			{@render children?.()}
-		</div>
+	<SceneViewSwitcher {map} />
+	<DrawingToolbar {map} />
+	<BasemapSwitcher {map} />
+	<MapScreenshot {map} />
 
-		<div class="absolute right-3 bottom-12 flex flex-col items-end gap-2">
-			<BasemapSwitcher />
-			<MapScreenshot {map} />
-		</div>
+	<MeasurementController
+		{map}
+		activeType={mapStore.drawType as 'MeasureDistance' | 'MeasureArea' | null}
+	/>
+	<CesiumController {map} enabled={mapStore.is3d} />
+	<StatusBar {map} projection={mapStore.projection} />
 
-		<MeasurementController
-			{map}
-			activeType={mapStore.drawType as 'MeasureDistance' | 'MeasureArea' | null}
+	{#if isPopupOpen && mapStore.selectedFeature}
+		<FeaturePropertiesPopup
+			feature={mapStore.selectedFeature}
+			onOpenChange={(open) => {
+				if (!open) mapStore.selectFeature(null);
+			}}
 		/>
-		<CesiumController {map} enabled={mapStore.is3d} />
-
-		<StatusBar {map} projection={mapStore.projection} />
-
-		{#if isPopupOpen && mapStore.selectedFeature}
-			<FeaturePropertiesPopup
-				feature={mapStore.selectedFeature}
-				onOpenChange={(open) => {
-					if (!open) mapStore.selectFeature(null);
-				}}
-			/>
-		{/if}
-	</div>
+	{/if}
+	{@render children?.()}
 </div>
 
 <style>
