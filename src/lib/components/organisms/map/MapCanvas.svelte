@@ -75,6 +75,11 @@ import * as sphere from 'ol/sphere.js';
 	import { Plus, Minus } from 'lucide-svelte';
 	import IconButton from '../../molecules/IconButton.svelte';
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const PlusIcon = Plus as any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const MinusIcon = Minus as any;
+
 	let { children } = $props<{
 		children?: import('svelte').Snippet;
 	}>();
@@ -424,17 +429,15 @@ import * as sphere from 'ol/sphere.js';
 		<LocationSearch {map} />
 		
 		<div class="ol-panel flex flex-col gap-1 w-fit">
-			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 			<IconButton
-				icon={Plus as any}
+				icon={PlusIcon}
 				label="Zoom In"
 				onclick={() => handleZoom(1)}
 				variant="secondary"
 				class="h-9 w-9"
 			/>
-			<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 			<IconButton
-				icon={Minus as any}
+				icon={MinusIcon}
 				label="Zoom Out"
 				onclick={() => handleZoom(-1)}
 				variant="secondary"
