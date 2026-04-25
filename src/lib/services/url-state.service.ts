@@ -63,7 +63,12 @@ export function updateUrlHash(params: Record<string, string | null>): void {
 	});
 
 	const url = new URL(window.location.href);
-	url.hash = segments.length > 0 ? segments.join('&') : '';
+	const newHash = segments.length > 0 ? `#${segments.join('&')}` : '';
+	
+	// Skip if hash hasn't changed to avoid unnecessary history entries and warnings
+	if (url.hash === newHash) return;
+
+	url.hash = newHash;
 	
 	// Use SvelteKit's replaceState for shallow routing if router is ready
 	if (isRouterInitialized) {
@@ -76,8 +81,9 @@ export function updateUrlHash(params: Record<string, string | null>): void {
 		}
 	}
 
-	// Fallback to native history (may trigger SvelteKit warning but prevents crashes)
-	window.history.replaceState({}, '', url.href);
+	// Do NOT use window.history.replaceState here if the router isn't ready.
+	// This avoids the SvelteKit warning. The state will be synced once the router is marked ready
+	// and the next reactive effect fires.
 }
 
 /**

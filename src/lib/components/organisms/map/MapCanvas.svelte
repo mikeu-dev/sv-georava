@@ -13,6 +13,7 @@
 	import Tile from 'ol/Tile.js';
 	import ImageCanvasSource from 'ol/source/ImageCanvas.js';
 	import { fromLonLat, toLonLat } from 'ol/proj.js';
+	import { Style, Fill, Stroke, Icon, Circle as CircleStyle } from 'ol/style.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
 	import { createBox } from 'ol/interaction/Draw.js';
@@ -86,6 +87,7 @@ import WKT from 'ol/format/WKT.js';
 				ImageCanvas: ImageCanvasSource
 			},
 			format: { GeoJSON, MVT, WKT },
+			style: { Style, Fill, Stroke, Icon, Circle: CircleStyle },
 			proj: { fromLonLat, toLonLat },
 			geom: { Point, LineString, Polygon, Circle },
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }
