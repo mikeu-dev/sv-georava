@@ -7,6 +7,7 @@
 	import VectorLayer from 'ol/layer/Vector.js';
 	import VectorSource from 'ol/source/Vector.js';
 	import OSM from 'ol/source/OSM.js';
+	import XYZ from 'ol/source/XYZ.js';
 	import { fromLonLat } from 'ol/proj.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
 	import { Draw, Modify, Select, DragAndDrop } from 'ol/interaction.js';
@@ -21,7 +22,18 @@
 
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
+	import { BASEMAPS } from '$lib/config/basemaps';
 	import { topoJsonDragFormat } from '$lib/services/ol-topojson-format';
+
+	import Compass from './Compass.svelte';
+	import BasemapSwitcher from './BasemapSwitcher.svelte';
+	import LocationSearch from './LocationSearch.svelte';
+	import MeasurementController from './MeasurementController.svelte';
+	import MapScreenshot from './MapScreenshot.svelte';
+	import FeaturePropertiesPopup from './FeaturePropertiesPopup.svelte';
+	import CesiumController from './CesiumController.svelte';
+	import StatusBar from './StatusBar.svelte';
+	import SceneViewSwitcher from './SceneViewSwitcher.svelte';
 
 	let { children } = $props();
 
@@ -29,7 +41,9 @@
 	let map = $state<Map>();
 	let vectorSource = $state<VectorSource<Feature<Geometry>>>();
 	let vectorLayer = $state<VectorLayer<VectorSource<Feature<Geometry>>>>();
-	let basemapLayer = $state<TileLayer<OSM>>();
+	let basemapLayer = $state<TileLayer<OSM | XYZ>>();
+
+	let isPopupOpen = $state(false);
 
 	// Initialize Map
 	onMount(() => {
@@ -86,9 +100,8 @@
 		const modify = new Modify({
 			source: vectorSource,
 			condition: (e: unknown) => {
-				// Type refinement for OpenLayers MapBrowserEvent
 				if (e && typeof e === 'object' && 'originalEvent' in e) {
-					const event = e as MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>;
+					const event = e as MapBrowserEvent<PointerEvent>;
 					return shiftKeyOnly(event) || event.type === 'pointerdown';
 				}
 				return false;
@@ -128,16 +141,12 @@
 		}
 
 		const type = mapStore.drawType;
-		if (!type || type === 'Edit' || type === 'Delete') return;
+		if (!type || type === 'Edit' || type === 'Delete' || type.startsWith('Measure')) return;
 
-		// We cast to unknown then to type because OL draw types are strict strings
-		const olType = type as unknown as import('ol/geom/Geometry').Type;
-		const geometryFunction = undefined;
-
+		const olType = type as import('ol/geom/Geometry').Type;
 		const draw = new Draw({
 			source: vectorSource,
-			type: olType,
-			geometryFunction
+			type: olType
 		});
 
 		draw.on('drawend', (e: DrawEvent) => {
@@ -158,6 +167,45 @@
 			vectorLayer.setOpacity(mapStore.vectorOpacity);
 			vectorLayer.setVisible(mapStore.vectorVisible);
 		}
+		if (basemapLayer) {
+			basemapLayer.setOpacity(mapStore.basemapOpacity);
+		}
+	});
+
+	// Effect: Basemap Switcher
+	$effect(() => {
+		if (!basemapLayer) return;
+		const def = BASEMAPS.find((b) => b.id === mapStore.activeBasemap);
+		if (def) {
+			const source = def.isXYZ ? new XYZ({ url: def.url, attributions: def.attributions, maxZoom: def.maxZoom }) : new OSM();
+			basemapLayer.setSource(source);
+		}
+	});
+
+	// Effect: Zoom To ID
+	$effect(() => {
+		if (!map || !vectorSource || !mapStore.zoomToId) return;
+		const feature = vectorSource.getFeatureById(mapStore.zoomToId);
+		if (feature) {
+			const geom = feature.getGeometry();
+			if (geom) {
+				map.getView().fit(geom.getExtent(), {
+					duration: 1000,
+					padding: [50, 50, 50, 50],
+					maxZoom: 18
+				});
+				mapStore.selectFeature(feature as Feature<Geometry>);
+			}
+		}
+	});
+
+	// Effect: Popup State
+	$effect(() => {
+		if (mapStore.selectedFeature) {
+			setTimeout(() => (isPopupOpen = true), 50);
+		} else {
+			isPopupOpen = false;
+		}
 	});
 
 	function syncStoreFromMap() {
@@ -170,8 +218,35 @@
 
 <div class="relative h-full w-full overflow-hidden">
 	<div bind:this={mapElement} class="h-full w-full outline-none bg-muted/20"></div>
+	
+	<!-- Map Overlay Components -->
 	<div class="absolute inset-0 pointer-events-none z-20">
-		{@render children?.()}
+		<LocationSearch {map} />
+		
+		<div class="absolute top-3 right-3 flex flex-col gap-3 items-end">
+			<Compass {map} />
+			<SceneViewSwitcher />
+			{@render children?.()}
+		</div>
+
+		<div class="absolute bottom-12 right-3 flex flex-col gap-2 items-end">
+			<BasemapSwitcher />
+			<MapScreenshot {map} />
+		</div>
+
+		<MeasurementController {map} activeType={mapStore.drawType as 'MeasureDistance' | 'MeasureArea' | null} />
+		<CesiumController {map} enabled={mapStore.is3d} />
+		
+		<StatusBar {map} projection={mapStore.projection} />
+
+		{#if isPopupOpen && mapStore.selectedFeature}
+			<FeaturePropertiesPopup
+				feature={mapStore.selectedFeature}
+				onOpenChange={(open) => {
+					if (!open) mapStore.selectFeature(null);
+				}}
+			/>
+		{/if}
 	</div>
 </div>
 

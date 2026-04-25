@@ -6,7 +6,7 @@
 import GeoJSON from 'ol/format/GeoJSON.js';
 import type { Feature } from 'ol';
 import type { Geometry } from 'ol/geom';
-import type { DrawType, ProjectionCode } from '$lib/types/map.types';
+import type { DrawType, ProjectionCode, BasemapId } from '$lib/types/map.types';
 import { DEFAULT_GEOJSON_STRING } from '$lib/config/constants';
 
 const format = new GeoJSON({
@@ -24,6 +24,8 @@ function createMapStore() {
 	let basemapOpacity = $state(1);
 	let isParsing = $state(false);
 	let zoomToId = $state<string | number | null>(null);
+	let is3d = $state(false);
+	let activeBasemap = $state<BasemapId>('osm');
 
 	/** Flag to skip bi-directional sync loops */
 	let skipFeaturesSync = false;
@@ -141,6 +143,10 @@ function createMapStore() {
 		get isParsing() { return isParsing; },
 		set isParsing(v: boolean) { isParsing = v; },
 		get zoomToId() { return zoomToId; },
+		get is3d() { return is3d; },
+		set is3d(v: boolean) { is3d = v; },
+		get activeBasemap() { return activeBasemap; },
+		set activeBasemap(v: BasemapId) { activeBasemap = v; },
 		get featuresCount() { return featuresCount; },
 		get geojsonString() { return geojsonString; },
 		get skipFeaturesSync() { return skipFeaturesSync; },

@@ -1,13 +1,10 @@
 import type { BasemapDefinition } from '$lib/types/map.types';
 
-/**
- * Available basemap configurations for the map viewer.
- */
-export const BASEMAPS: readonly BasemapDefinition[] = [
+export const BASEMAPS: BasemapDefinition[] = [
 	{
 		id: 'osm',
 		name: 'OpenStreetMap',
-		url: '',
+		url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 		maxZoom: 19,
 		attributions: '© OpenStreetMap contributors',
 		isXYZ: false
@@ -17,7 +14,7 @@ export const BASEMAPS: readonly BasemapDefinition[] = [
 		name: 'Satellite (Esri)',
 		url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
 		maxZoom: 19,
-		attributions: 'Tiles © Esri',
+		attributions: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EBP, and the GIS User Community',
 		isXYZ: true
 	},
 	{
@@ -25,7 +22,7 @@ export const BASEMAPS: readonly BasemapDefinition[] = [
 		name: 'Topographic',
 		url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
 		maxZoom: 17,
-		attributions: '© OpenTopoMap',
+		attributions: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)',
 		isXYZ: true
 	},
 	{
@@ -33,7 +30,7 @@ export const BASEMAPS: readonly BasemapDefinition[] = [
 		name: 'Dark (CartoDB)',
 		url: 'https://{a-d}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
 		maxZoom: 20,
-		attributions: '© CARTO',
+		attributions: '© OpenStreetMap contributors, © CARTO',
 		isXYZ: true
 	}
-] as const;
+];

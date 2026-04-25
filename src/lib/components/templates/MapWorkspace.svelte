@@ -3,9 +3,7 @@
 	import JsonEditorPanel from '../organisms/sidebar/JsonEditorPanel.svelte';
 	import MapCanvas from '../organisms/map/MapCanvas.svelte';
 	import DrawingToolbar from '../organisms/map/DrawingToolbar.svelte';
-	import StatusBar from '../organisms/map/StatusBar.svelte';
 	import { uiStore } from '$lib/stores/ui.store.svelte';
-	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { onMount } from 'svelte';
 
 	onMount(() => {
@@ -40,7 +38,6 @@
 	<main class="relative flex-1 h-full overflow-hidden">
 		<MapCanvas>
 			<DrawingToolbar />
-			<StatusBar />
 		</MapCanvas>
 
 		<!-- Notifications / Overlays -->

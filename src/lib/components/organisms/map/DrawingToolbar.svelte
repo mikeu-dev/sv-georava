@@ -2,52 +2,65 @@
 	import IconButton from '../../molecules/IconButton.svelte';
 	import {
 		MousePointer2,
+		MapPin,
+		Spline,
 		Square,
 		Circle,
 		Pencil,
-		Minus,
 		Trash2,
 		Type,
-		Pentagon
+		Pentagon,
+		Ruler,
+		Maximize
 	} from 'lucide-svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import type { DrawType } from '$lib/types/map.types';
-	import type { Icon } from 'lucide-svelte';
 	import type { Component, ComponentProps } from 'svelte';
+	import type { Icon } from 'lucide-svelte';
 
 	type LucideIcon = Component<ComponentProps<Icon>>;
 
 	interface ToolItem {
-		type: DrawType;
+		type: DrawType | null;
 		icon: LucideIcon;
 		label: string;
 		shortcut?: string;
 	}
 
 	const tools: ToolItem[] = [
-		{ type: 'Point', icon: MousePointer2 as unknown as LucideIcon, label: 'Select (V)', shortcut: 'V' },
-		{ type: 'LineString', icon: Minus as unknown as LucideIcon, label: 'Line (L)', shortcut: 'L' },
-		{ type: 'Polygon', icon: Pentagon as unknown as LucideIcon, label: 'Polygon (P)', shortcut: 'P' },
-		{ type: 'Circle', icon: Circle as unknown as LucideIcon, label: 'Circle (C)', shortcut: 'C' },
-		{ type: 'Rectangle', icon: Square as unknown as LucideIcon, label: 'Rectangle (R)', shortcut: 'R' },
-		{ type: 'Freehand', icon: Pencil as unknown as LucideIcon, label: 'Freehand (F)', shortcut: 'F' },
-		{ type: 'Text', icon: Type as unknown as LucideIcon, label: 'Text (T)', shortcut: 'T' },
-		{ type: 'Delete', icon: Trash2 as unknown as LucideIcon, label: 'Delete (Del)', shortcut: 'Del' }
+		{ type: null, icon: MousePointer2 as unknown as LucideIcon, label: 'Select' },
+		{ type: 'Point', icon: MapPin as unknown as LucideIcon, label: 'Point' },
+		{ type: 'LineString', icon: Spline as unknown as LucideIcon, label: 'Line' },
+		{ type: 'Polygon', icon: Pentagon as unknown as LucideIcon, label: 'Polygon' },
+		{ type: 'Rectangle', icon: Square as unknown as LucideIcon, label: 'Rectangle' },
+		{ type: 'Circle', icon: Circle as unknown as LucideIcon, label: 'Circle' },
+		{ type: 'Freehand', icon: Pencil as unknown as LucideIcon, label: 'Freehand' },
+		{ type: 'Text', icon: Type as unknown as LucideIcon, label: 'Text' },
+		{ type: 'MeasureDistance', icon: Ruler as unknown as LucideIcon, label: 'Measure Distance' },
+		{ type: 'MeasureArea', icon: Maximize as unknown as LucideIcon, label: 'Measure Area' },
+		{ type: 'Delete', icon: Trash2 as unknown as LucideIcon, label: 'Delete' }
 	];
+
+	function handleToolSelect(type: DrawType | null) {
+		mapStore.setDrawType(type);
+	}
 </script>
 
 <div class="drawing-tools ol-unselectable ol-control pointer-events-auto">
-	<div class="drawing-controls">
-		{#each tools as tool (tool.type)}
+	<div class="drawing-controls flex flex-col gap-1">
+		{#each tools as tool (tool.type || 'select')}
 			<IconButton
 				icon={tool.icon}
 				label={tool.label}
-				onclick={() => mapStore.setDrawType(tool.type)}
+				onclick={() => handleToolSelect(tool.type)}
 				active={mapStore.drawType === tool.type}
 				variant={mapStore.drawType === tool.type ? 'accent' : 'ghost'}
 				class="h-8 w-8"
 				side="left"
 			/>
+			{#if tool.type === 'Text' || tool.type === 'MeasureArea'}
+				<div class="my-0.5 h-px w-full bg-border/40"></div>
+			{/if}
 		{/each}
 	</div>
 </div>
