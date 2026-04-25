@@ -5,6 +5,9 @@
 	import View from 'ol/View.js';
 	import TileLayer from 'ol/layer/Tile.js';
 	import VectorLayer from 'ol/layer/Vector.js';
+	import ImageLayer from 'ol/layer/Image.js';
+	import LayerGroup from 'ol/layer/Group.js';
+	import Layer from 'ol/layer/Layer.js';
 	import VectorSource from 'ol/source/Vector.js';
 	import OSM from 'ol/source/OSM.js';
 	import XYZ from 'ol/source/XYZ.js';
@@ -92,7 +95,7 @@ import * as sphere from 'ol/sphere.js';
 			Collection,
 			Object: BaseObject,
 			events,
-			layer: { Tile: TileLayer, Vector: VectorLayer },
+			layer: { Tile: TileLayer, Vector: VectorLayer, Group: LayerGroup, Layer, Image: ImageLayer },
 			source: {
 				Vector: VectorSource,
 				OSM,
