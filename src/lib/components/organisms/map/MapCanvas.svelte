@@ -12,6 +12,10 @@
 	import ImageSource from 'ol/source/Image.js';
 	import Tile from 'ol/Tile.js';
 	import ImageCanvasSource from 'ol/source/ImageCanvas.js';
+	import Feature from 'ol/Feature.js';
+	import Collection from 'ol/Collection.js';
+	import Overlay from 'ol/Overlay.js';
+	import BaseObject from 'ol/Object.js';
 	import { fromLonLat, toLonLat } from 'ol/proj.js';
 	import { Style, Fill, Stroke, Icon, Circle as CircleStyle } from 'ol/style.js';
 	import { defaults as defaultControls, ScaleLine } from 'ol/control.js';
@@ -27,7 +31,6 @@ import * as events from 'ol/events.js';
 import RenderFeature from 'ol/render/Feature.js';
 import * as extent from 'ol/extent.js';
 import * as sphere from 'ol/sphere.js';
-	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
 	import type { SelectEvent } from 'ol/interaction/Select';
 	import type { DragAndDropEvent } from 'ol/interaction/DragAndDrop';
@@ -84,6 +87,10 @@ import * as sphere from 'ol/sphere.js';
 			View,
 			Tile,
 			Observable,
+			Overlay,
+			Feature,
+			Collection,
+			Object: BaseObject,
 			events,
 			layer: { Tile: TileLayer, Vector: VectorLayer },
 			source: {
