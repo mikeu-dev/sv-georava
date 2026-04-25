@@ -36,6 +36,8 @@ function getMapState(map) {
 import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 import GeoJSON from "ol/format/GeoJSON.js";
+import OSM2 from "ol/source/OSM.js";
+import XYZ from "ol/source/XYZ.js";
 function addLayer(map, config) {
   if (config.type === "geojson") {
     const source = new VectorSource({
@@ -59,6 +61,16 @@ function removeLayer(map, id) {
     map.removeLayer(layerToRemove);
   }
 }
+function setBasemap(layer, config) {
+  const source = config.isXYZ && config.url ? new XYZ({ url: config.url, attributions: config.attributions, maxZoom: config.maxZoom }) : new OSM2();
+  layer.setSource(source);
+}
+function setLayerOpacity(layer, opacity) {
+  layer.setOpacity(opacity);
+}
+function setLayerVisibility(layer, visible) {
+  layer.setVisible(visible);
+}
 
 // src/events/events.ts
 function onMapEvent(map, event, handler) {
@@ -72,11 +84,41 @@ function onMapEvent(map, event, handler) {
     handler(wrappedEvent);
   });
 }
+
+// src/interaction/interaction.ts
+import { Select, Modify, DragAndDrop, Draw } from "ol/interaction.js";
+function addSelectInteraction(map, options) {
+  const select = new Select(options);
+  map.addInteraction(select);
+  return select;
+}
+function addModifyInteraction(map, options) {
+  const modify = new Modify(options);
+  map.addInteraction(modify);
+  return modify;
+}
+function addDrawInteraction(map, options) {
+  const draw = new Draw(options);
+  map.addInteraction(draw);
+  return draw;
+}
+function addDragAndDropInteraction(map, options) {
+  const dragAndDrop = new DragAndDrop(options);
+  map.addInteraction(dragAndDrop);
+  return dragAndDrop;
+}
 export {
+  addDragAndDropInteraction,
+  addDrawInteraction,
   addLayer,
+  addModifyInteraction,
+  addSelectInteraction,
   createMap,
   getMapState,
   onMapEvent,
-  removeLayer
+  removeLayer,
+  setBasemap,
+  setLayerOpacity,
+  setLayerVisibility
 };
 //# sourceMappingURL=index.js.map

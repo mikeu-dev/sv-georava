@@ -53,7 +53,7 @@ import * as sphere from 'ol/sphere.js';
 	import BaseLayer from 'ol/layer/Base.js';
 	import VectorTileSource from 'ol/source/VectorTile.js';
 	import Source from 'ol/source/Source.js';
-	import { createMap, onMapEvent } from '@geovara/core';
+	import { createMap, onMapEvent, getMapState, addSelectInteraction, addModifyInteraction, addDragAndDropInteraction, addDrawInteraction, setBasemap, setLayerOpacity, setLayerVisibility } from '@geovara/core';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { DEFAULT_CENTER, DEFAULT_ZOOM } from '$lib/config/constants';
 	import { BASEMAPS } from '$lib/config/basemaps';
@@ -186,35 +186,31 @@ import * as sphere from 'ol/sphere.js';
 		});
 		map.addLayer(vectorLayer);
 
-		// Sync Map -> URL on moveend using core function wrapper if available
+		// Sync Map -> URL on moveend using core function wrapper
 		onMapEvent(map, 'moveend', () => {
 			if (!map) return;
-			const view = map.getView();
-			const center = proj.toLonLat(view.getCenter() || [0, 0]);
-			const zoom = view.getZoom() || DEFAULT_ZOOM;
-			const mapHash = `${zoom.toFixed(2)}/${center[1].toFixed(4)}/${center[0].toFixed(4)}`;
+			const state = getMapState(map);
+			const mapHash = `${state.zoom.toFixed(2)}/${state.center[1].toFixed(4)}/${state.center[0].toFixed(4)}`;
 			updateUrlHash({ map: mapHash });
 		});
 
 		// Interaction: Select
-		const select = new Select({
+		const select = addSelectInteraction(map, {
 			style: undefined,
 			hitTolerance: 5
 		});
-		map.addInteraction(select);
 		select.on('select', (e: SelectEvent) => {
 			const selected = e.selected[0] || null;
 			mapStore.selectFeature(selected as Feature<BaseGeometry> | null);
 		});
 
 		// Interaction: DragAndDrop
-		const dragAndDrop = new DragAndDrop({
+		const dragAndDrop = addDragAndDropInteraction(map, {
 			formatConstructors: [
 				GeoJSON as unknown as typeof GeoJSON,
 				topoJsonDragFormat as unknown as typeof GeoJSON
 			]
 		});
-		map.addInteraction(dragAndDrop);
 		dragAndDrop.on('addfeatures', (e: DragAndDropEvent) => {
 			if (e.features) {
 				vectorSource?.addFeatures(e.features as Feature<BaseGeometry>[]);
@@ -223,7 +219,7 @@ import * as sphere from 'ol/sphere.js';
 		});
 
 		// Interaction: Modify
-		const modify = new Modify({
+		const modify = addModifyInteraction(map, {
 			source: vectorSource,
 			condition: (e: unknown) => {
 				if (e && typeof e === 'object' && 'originalEvent' in e) {
@@ -233,7 +229,6 @@ import * as sphere from 'ol/sphere.js';
 				return false;
 			}
 		});
-		map.addInteraction(modify);
 		modify.on('modifyend', () => syncStoreFromMap());
 
 		// Sync store initial state
@@ -251,15 +246,6 @@ import * as sphere from 'ol/sphere.js';
 			}
 		}
 
-		// Sync Map -> URL on moveend
-		map.on('moveend', () => {
-			if (!map) return;
-			const view = map.getView();
-			const center = proj.toLonLat(view.getCenter() || [0, 0]);
-			const zoom = view.getZoom() || DEFAULT_ZOOM;
-			const mapHash = `${zoom.toFixed(2)}/${center[1].toFixed(4)}/${center[0].toFixed(4)}`;
-			updateUrlHash({ map: mapHash });
-		});
 
 		// Sync URL -> Map on hashchange
 		const handleHashChange = () => {
@@ -327,7 +313,7 @@ import * as sphere from 'ol/sphere.js';
 		}
 
 		drawOptions.type = olType;
-		const draw = new Draw(drawOptions);
+		const draw = addDrawInteraction(map, drawOptions);
 
 		draw.on('drawend', (e: DrawEvent) => {
 			const feature = e.feature;
@@ -344,11 +330,11 @@ import * as sphere from 'ol/sphere.js';
 	// Effect: Layer Opacity & Visibility
 	$effect(() => {
 		if (vectorLayer) {
-			vectorLayer.setOpacity(mapStore.vectorOpacity);
-			vectorLayer.setVisible(mapStore.vectorVisible);
+			setLayerOpacity(vectorLayer, mapStore.vectorOpacity);
+			setLayerVisibility(vectorLayer, mapStore.vectorVisible);
 		}
 		if (basemapLayer) {
-			basemapLayer.setOpacity(mapStore.basemapOpacity);
+			setLayerOpacity(basemapLayer, mapStore.basemapOpacity);
 		}
 	});
 
@@ -357,10 +343,7 @@ import * as sphere from 'ol/sphere.js';
 		if (!basemapLayer) return;
 		const def = BASEMAPS.find((b) => b.id === mapStore.activeBasemap);
 		if (def) {
-			const source = def.isXYZ
-				? new XYZ({ url: def.url, attributions: def.attributions, maxZoom: def.maxZoom })
-				: new OSM();
-			basemapLayer.setSource(source);
+			setBasemap(basemapLayer, def);
 		}
 	});
 
