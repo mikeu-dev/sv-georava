@@ -5,12 +5,13 @@
 	import { uiStore } from '$lib/stores/ui.store.svelte';
 	import { mapStore } from '$lib/stores/map.store.svelte';
 	import { onMount } from 'svelte';
-	import { getFromHash, decodeGeoJSON, encodeGeoJSON, updateUrlHash } from '$lib/services/url-state.service';
+	import { getFromHash, decodeGeoJSON, encodeGeoJSON, updateUrlHash, markRouterAsInitialized } from '$lib/services/url-state.service';
 	import type { BasemapId } from '$lib/types/map.types';
 
 	let { user } = $props<{ user: { name: string; email: string; image?: string | null } | null }>();
 
 	onMount(() => {
+		markRouterAsInitialized();
 		uiStore.initTheme();
 
 		// Load initial state from URL

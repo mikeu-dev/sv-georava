@@ -18,6 +18,8 @@
 	import { createBox } from 'ol/interaction/Draw.js';
 	import { shiftKeyOnly } from 'ol/events/condition.js';
 	import GeoJSON from 'ol/format/GeoJSON.js';
+import MVT from 'ol/format/MVT.js';
+import WKT from 'ol/format/WKT.js';
 	import type { Feature } from 'ol';
 	import type { Geometry } from 'ol/geom';
 	import type { SelectEvent } from 'ol/interaction/Select';
@@ -83,6 +85,7 @@
 				Image: ImageSource,
 				ImageCanvas: ImageCanvasSource
 			},
+			format: { GeoJSON, MVT, WKT },
 			proj: { fromLonLat, toLonLat },
 			geom: { Point, LineString, Polygon, Circle },
 			interaction: { Draw, Modify, Select, DragAndDrop, createBox }

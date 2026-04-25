@@ -38,6 +38,15 @@ function hashQuerySegments(): string[] {
 	return raw ? raw.split('&').filter(Boolean) : [];
 }
 
+let isRouterInitialized = false;
+
+/**
+ * Signal that the SvelteKit router is ready.
+ */
+export function markRouterAsInitialized(): void {
+	isRouterInitialized = true;
+}
+
 /**
  * Merges state into the URL hash without dropping other segments.
  */
@@ -56,16 +65,19 @@ export function updateUrlHash(params: Record<string, string | null>): void {
 	const url = new URL(window.location.href);
 	url.hash = segments.length > 0 ? segments.join('&') : '';
 	
-	// Use SvelteKit's replaceState for shallow routing (updates URL without navigation)
-	try {
-		// @ts-expect-error - SvelteKit's replaceState is typed for known routes, but we need dynamic URL here
-		replaceState(resolve(url.pathname + url.search + url.hash), {});
-	} catch {
-		// Fallback to native history if router is not yet initialized or fails
-		if (typeof window !== 'undefined') {
-			window.history.replaceState({}, '', url.href);
+	// Use SvelteKit's replaceState for shallow routing if router is ready
+	if (isRouterInitialized) {
+		try {
+			// @ts-expect-error - SvelteKit's replaceState is typed for known routes, but we need dynamic URL here
+			replaceState(resolve(url.pathname + url.search + url.hash), {});
+			return;
+		} catch {
+			// ignore and fallback
 		}
 	}
+
+	// Fallback to native history (may trigger SvelteKit warning but prevents crashes)
+	window.history.replaceState({}, '', url.href);
 }
 
 /**
